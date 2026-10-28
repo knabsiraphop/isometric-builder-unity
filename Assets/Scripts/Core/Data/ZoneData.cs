@@ -8,8 +8,7 @@ namespace IsoBuilder.Core
     public struct ZoneData
     {
         public ZoneType type;
-        public Vector2Int position;
-        public Vector2Int size;
-        public TileBase tile;
+        public RectInt rect;
+        public int tileId;
     }
 }
