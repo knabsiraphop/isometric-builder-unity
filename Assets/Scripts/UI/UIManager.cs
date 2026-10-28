@@ -1,15 +1,18 @@
 using IsoBuilder.Core;
 using UnityEngine;
 
-public class UIManager : MonoBehaviour, IUIManager
+namespace IsoBuilder.UI
 {
-    [SerializeField] private GameObject loadingScreen;
-
-    public void SetActiveLoadingScreen(bool isActive)
+    public class UIManager : MonoBehaviour, IUIManager
     {
-        if (loadingScreen != null)
+        [SerializeField] private GameObject loadingScreen;
+
+        public void SetActiveLoadingScreen(bool isActive)
         {
-            loadingScreen.SetActive(isActive);
+            if (loadingScreen != null)
+            {
+                loadingScreen.SetActive(isActive);
+            }
         }
     }
 }

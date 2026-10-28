@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace ISOBuilder.Utils
+namespace IsoBuilder.Utils
 {
     [RequireComponent(typeof(Camera))]
     public class CameraSafeArea : MonoBehaviour
