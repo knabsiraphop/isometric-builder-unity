@@ -1,4 +1,5 @@
 using IsoBuilder.Core;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -11,6 +12,9 @@ namespace IsoBuilder.Gameplay
         [SerializeField] private Grid zoneGrid;
         [SerializeField] private TilemapRenderer zoneGridRenderer;
 
+        private Dictionary<Vector2Int, ZoneType> gridDatas;
+        private Dictionary<int, TileBase> tileBases;
+
         public void Initialize()
         {
             if (config == null)
@@ -18,18 +22,50 @@ namespace IsoBuilder.Gameplay
                 return;
             }
 
+            MapTileBases();
             zoneGrid.cellSize = new Vector3(config.CellSize.x, config.CellSize.y, 1);
-            for (int i = 0; i < config.Zones.Length; i++)
+            gridDatas = new Dictionary<Vector2Int, ZoneType>();
+            gridDatas.EnsureCapacity(config.GridSize.x * config.GridSize.y);
+            for (int x = 0; x < config.GridSize.x; x++)
             {
-                ZoneData zone = config.Zones[i];
-                for (int x = 0; x < zone.size.x; x++)
+                for (int y = 0; y < config.GridSize.y; y++)
                 {
-                    for (int y = 0; y < zone.size.y; y++)
+                    Vector3Int tilePosition = new Vector3Int(x, y, 0);
+                    ZoneData zone = default;
+                    ZoneType zoneType = ZoneType.None;
+                    int tileId = config.DefaultTileId;
+
+                    for (int i = 0; i < config.Zones.Length; i++)
                     {
-                        Vector3Int tilePosition = new Vector3Int(zone.position.x + x, zone.position.y + y, 0);
-                        zoneTilemap.SetTile(tilePosition, zone.tile);
+                        if (config.Zones[i].rect.Contains(new Vector2Int(x, y)))
+                        {
+                            zone = config.Zones[i];
+                            break;
+                        }
+                    }
+
+                    if (!zone.Equals(default(ZoneData)))
+                    {
+                        zoneType = zone.type;
+                        tileId = zone.tileId;
+                    }
+
+                    gridDatas[new Vector2Int(x, y)] = zoneType;
+                    if (tileBases.TryGetValue(tileId, out TileBase tile))
+                    {
+                        zoneTilemap.SetTile(tilePosition, tile);
                     }
                 }
+            }
+        }
+
+        private void MapTileBases()
+        {
+            tileBases = new Dictionary<int, TileBase>();
+            for (int i = 0; i < config.ZoneTiles.Length; i++)
+            {
+                ZoneTile zoneTile = config.ZoneTiles[i];
+                tileBases[zoneTile.tileId] = zoneTile.tile;
             }
         }
 
