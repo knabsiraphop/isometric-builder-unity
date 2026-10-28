@@ -26,6 +26,11 @@ namespace IsoBuilder.Gameplay
             zoneGrid.cellSize = new Vector3(config.CellSize.x, config.CellSize.y, 1);
             gridDatas = new Dictionary<Vector2Int, ZoneType>();
             gridDatas.EnsureCapacity(config.GridSize.x * config.GridSize.y);
+            SetupMapTiles();
+        }
+
+        private void SetupMapTiles() 
+        {
             for (int x = 0; x < config.GridSize.x; x++)
             {
                 for (int y = 0; y < config.GridSize.y; y++)
