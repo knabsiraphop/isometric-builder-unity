@@ -29,16 +29,18 @@ namespace IsoBuilder.Gameplay
             SetupMapTiles();
         }
 
-        private void SetupMapTiles() 
+        private void SetupMapTiles()
         {
             for (int x = 0; x < config.GridSize.x; x++)
             {
                 for (int y = 0; y < config.GridSize.y; y++)
                 {
                     Vector3Int tilePosition = new Vector3Int(x, y, 0);
-                    ZoneData zone = default;
-                    ZoneType zoneType = ZoneType.None;
-                    int tileId = config.DefaultTileId;
+                    ZoneData zone = new ZoneData()
+                    {
+                        tileId = config.DefaultTileId,
+                        type = ZoneType.None,
+                    };
 
                     for (int i = 0; i < config.Zones.Length; i++)
                     {
@@ -49,14 +51,8 @@ namespace IsoBuilder.Gameplay
                         }
                     }
 
-                    if (!zone.Equals(default(ZoneData)))
-                    {
-                        zoneType = zone.type;
-                        tileId = zone.tileId;
-                    }
-
-                    gridDatas[new Vector2Int(x, y)] = zoneType;
-                    if (tileBases.TryGetValue(tileId, out TileBase tile))
+                    gridDatas[new Vector2Int(x, y)] = zone.type;
+                    if (tileBases.TryGetValue(zone.tileId, out TileBase tile))
                     {
                         zoneTilemap.SetTile(tilePosition, tile);
                     }
@@ -77,6 +73,16 @@ namespace IsoBuilder.Gameplay
         public Bounds GetMapBounds()
         {
             return zoneGridRenderer.bounds;
+        }
+
+        public bool TryGetZoneType(Vector2Int gridPosition, out ZoneType zoneType)
+        {
+            if (gridDatas == null)
+            {
+                zoneType = ZoneType.None;
+                return false;
+            }
+            return gridDatas.TryGetValue(gridPosition, out zoneType);
         }
     }
 }
