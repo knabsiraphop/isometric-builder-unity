@@ -42,7 +42,7 @@ namespace IsoBuilder.Gameplay
                         type = ZoneType.None,
                     };
 
-                    for (int i = 0; i < config.Zones.Length; i++)
+                    for (int i = 0; i < config.Zones.Count; i++)
                     {
                         if (config.Zones[i].rect.Contains(new Vector2Int(x, y)))
                         {
@@ -63,7 +63,7 @@ namespace IsoBuilder.Gameplay
         private void MapTileBases()
         {
             tileBases = new Dictionary<int, TileBase>();
-            for (int i = 0; i < config.ZoneTiles.Length; i++)
+            for (int i = 0; i < config.ZoneTiles.Count; i++)
             {
                 ZoneTile zoneTile = config.ZoneTiles[i];
                 tileBases[zoneTile.tileId] = zoneTile.tile;

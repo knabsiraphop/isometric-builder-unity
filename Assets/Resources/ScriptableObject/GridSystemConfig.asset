@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 494b49bfd577f714dadc09d00e060e6b, type: 3}
   m_Name: GridSystemConfig
   m_EditorClassIdentifier: IsoBuilder.Core::IsoBuilder.Core.GridSystemConfig
-  GridSize: {x: 30, y: 30}
-  CellSize: {x: 1.11, y: 0.64}
-  Zones:
+  gridSize: {x: 30, y: 30}
+  cellSize: {x: 1.11, y: 0.64}
+  zones:
   - type: 1
     rect:
       x: 0
@@ -29,11 +29,11 @@ MonoBehaviour:
       width: 15
       height: 20
     tileId: 2
-  ZoneTiles:
+  zoneTiles:
   - tileId: 0
     tile: {fileID: 11400000, guid: 832a13ad85e869c4087324e099f2f9ab, type: 2}
   - tileId: 1
     tile: {fileID: 11400000, guid: 5c21ec6b2b17b1f4194722464059dd80, type: 2}
   - tileId: 2
     tile: {fileID: 11400000, guid: fbcb90ba3ddb4a64eb6a67362cdd2aa5, type: 2}
-  DefaultTileId: 0
+  defaultTileId: 0
