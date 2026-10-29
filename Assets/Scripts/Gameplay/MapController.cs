@@ -1,3 +1,4 @@
+using Cysharp.Threading.Tasks;
 using IsoBuilder.Core;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,25 +8,28 @@ namespace IsoBuilder.Gameplay
 {
     public class MapController : MonoBehaviour
     {
-        [SerializeField] private GridSystemConfig config;
         [SerializeField] private Tilemap zoneTilemap;
         [SerializeField] private Grid zoneGrid;
         [SerializeField] private TilemapRenderer zoneGridRenderer;
 
+        private GridSystemConfig config;
         private Dictionary<Vector2Int, ZoneType> gridDatas;
         private Dictionary<int, TileBase> tileBases;
 
-        public void Initialize()
+        public async UniTask Initialize(GridSystemConfig config)
         {
             if (config == null)
             {
                 return;
             }
 
-            MapTileBases();
+            this.config = config;
+
             zoneGrid.cellSize = new Vector3(config.CellSize.x, config.CellSize.y, 1);
             gridDatas = new Dictionary<Vector2Int, ZoneType>();
             gridDatas.EnsureCapacity(config.GridSize.x * config.GridSize.y);
+
+            await PreLoadTiles();
             SetupMapTiles();
         }
 
@@ -52,7 +56,8 @@ namespace IsoBuilder.Gameplay
                     }
 
                     gridDatas[new Vector2Int(x, y)] = zone.Type;
-                    if (tileBases.TryGetValue(zone.TileId, out TileBase tile))
+
+                    if (TryGetTileBase(zone.TileId, out TileBase tile))
                     {
                         zoneTilemap.SetTile(tilePosition, tile);
                     }
@@ -60,14 +65,41 @@ namespace IsoBuilder.Gameplay
             }
         }
 
-        private void MapTileBases()
+        private async UniTask PreLoadTiles()
         {
             tileBases = new Dictionary<int, TileBase>();
-            for (int i = 0; i < config.ZoneTiles.Count; i++)
+
+            HashSet<int> ids = new HashSet<int>() { config.DefaultTileId };
+            for (int i = 0; i < config.Zones.Count; i++)
             {
-                ZoneTile zoneTile = config.ZoneTiles[i];
-                tileBases[zoneTile.tileId] = zoneTile.tile;
+                ids.Add(config.Zones[i].TileId);
             }
+
+            foreach (int id in ids)
+            {
+                ResourceRequest resourceRequest = Resources.LoadAsync<TileBase>($"Tile/Tile_{id}");
+                await resourceRequest.ToUniTask();
+                if (resourceRequest.asset == null)
+                {
+                    Debug.LogWarning($"Tile with id {id} not found in Resources/Tile/Tile_{id}");
+                }
+                else
+                {
+                    TileBase result = resourceRequest.asset as TileBase;
+                    tileBases[id] = result;
+                }
+            }
+        }
+
+        private bool TryGetTileBase(int tileId, out TileBase tileBase)
+        {
+            if (tileBases.TryGetValue(tileId, out TileBase cachedTile))
+            {
+                tileBase = cachedTile;
+                return true;
+            }
+            tileBase = null;
+            return false;
         }
 
         public Bounds GetMapBounds()

@@ -1,3 +1,5 @@
+using Cysharp.Threading.Tasks;
+using IsoBuilder.Core;
 using IsoBuilder.Gameplay;
 using IsoBuilder.UI;
 using UnityEngine;
@@ -9,24 +11,22 @@ namespace IsoBuilder
         [SerializeField] private UIManager uiManager;
         [SerializeField] private MapController mapController;
         [SerializeField] private CameraController cameraController;
+        [SerializeField] private GameConfig gameConfig;
 
-        private void Start()
+        private ItemCatalog itemCatalog;
+
+        private async UniTaskVoid Start()
         {
-            if (mapController != null)
-            {
-                mapController.Initialize();
-            }
+            itemCatalog = new ItemCatalog();
+            itemCatalog.Initialize(gameConfig.ItemConfig);
 
-            if(cameraController != null)
-            {
-                cameraController.Initialize();
-                cameraController.FitToBounds(mapController.GetMapBounds());
-            }
 
-            if (uiManager != null)
-            {
-                uiManager.SetActiveLoadingScreen(false);
-            }
+            await mapController.Initialize(gameConfig.GridSystemConfig);
+
+            cameraController.Initialize();
+            cameraController.FitToBounds(mapController.GetMapBounds());
+
+            uiManager.SetActiveLoadingScreen(false);
         }
     }
 }

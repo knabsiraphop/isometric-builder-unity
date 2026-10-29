@@ -3,7 +3,8 @@
     "rootNamespace": "IsoBuilder.Gameplay",
     "references": [
         "GUID:969472510709e9442bf6376257108793",
-        "GUID:5f0f40ff2da8e8748b39e9c392397788"
+        "GUID:5f0f40ff2da8e8748b39e9c392397788",
+        "GUID:f51ebe6a0ceec4240a699833d6309b23"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
