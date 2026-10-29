@@ -38,21 +38,21 @@ namespace IsoBuilder.Gameplay
                     Vector3Int tilePosition = new Vector3Int(x, y, 0);
                     ZoneData zone = new ZoneData()
                     {
-                        tileId = config.DefaultTileId,
-                        type = ZoneType.None,
+                        TileId = config.DefaultTileId,
+                        Type = ZoneType.None,
                     };
 
                     for (int i = 0; i < config.Zones.Count; i++)
                     {
-                        if (config.Zones[i].rect.Contains(new Vector2Int(x, y)))
+                        if (config.Zones[i].Rect.Contains(new Vector2Int(x, y)))
                         {
                             zone = config.Zones[i];
                             break;
                         }
                     }
 
-                    gridDatas[new Vector2Int(x, y)] = zone.type;
-                    if (tileBases.TryGetValue(zone.tileId, out TileBase tile))
+                    gridDatas[new Vector2Int(x, y)] = zone.Type;
+                    if (tileBases.TryGetValue(zone.TileId, out TileBase tile))
                     {
                         zoneTilemap.SetTile(tilePosition, tile);
                     }
