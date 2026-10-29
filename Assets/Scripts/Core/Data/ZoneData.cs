@@ -7,8 +7,8 @@ namespace IsoBuilder.Core
     [Serializable]
     public struct ZoneData
     {
-        public ZoneType type;
-        public RectInt rect;
-        public int tileId;
+        public ZoneType Type;
+        public RectInt Rect;
+        public int TileId;
     }
 }
