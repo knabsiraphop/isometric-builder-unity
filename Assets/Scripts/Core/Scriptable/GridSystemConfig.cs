@@ -9,13 +9,11 @@ namespace IsoBuilder.Core
         [SerializeField] private Vector2Int gridSize;
         [SerializeField] private Vector2 cellSize;
         [SerializeField] private ZoneData[] zones;
-        [SerializeField] private ZoneTile[] zoneTiles;
         [SerializeField] private int defaultTileId;
 
         public Vector2Int GridSize => gridSize;
         public Vector2 CellSize => cellSize;
         public IReadOnlyList<ZoneData> Zones => zones;
-        public IReadOnlyList<ZoneTile> ZoneTiles => zoneTiles;
         public int DefaultTileId => defaultTileId;
     }
 }

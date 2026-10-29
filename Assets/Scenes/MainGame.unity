@@ -10103,6 +10103,7 @@ MonoBehaviour:
   uiManager: {fileID: 2058197811}
   mapController: {fileID: 2058197812}
   cameraController: {fileID: 2058197813}
+  gameConfig: {fileID: 11400000, guid: 6875777028452e248aae92cedf6218cc, type: 2}
 --- !u!4 &2058197810
 Transform:
   m_ObjectHideFlags: 0
