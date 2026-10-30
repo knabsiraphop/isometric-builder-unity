@@ -21,5 +21,15 @@ namespace IsoBuilder.UI
         {
             uiItemCatalog.AddItem(itemSprite, onClickAction);
         }
+
+        public void ShowPlacementPanel(UnityAction onConfirm, UnityAction onCancel, UnityAction onFlip)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public void HidePlacementPanel()
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

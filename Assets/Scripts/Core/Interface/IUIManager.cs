@@ -7,5 +7,7 @@ namespace IsoBuilder.Core
     {
         public void SetActiveLoadingScreen(bool isActive);
         public void AddItemsToList(Sprite itemSprite, UnityAction onClickAction);
+        public void ShowPlacementPanel(UnityAction onConfirm, UnityAction onCancel, UnityAction onFlip);
+        public void HidePlacementPanel();
     }
 }
