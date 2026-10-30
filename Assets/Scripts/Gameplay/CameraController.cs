@@ -42,6 +42,16 @@ namespace IsoBuilder.Gameplay
             cam.orthographicSize = size;
         }
 
+        public Vector2 GetScreenCenter() 
+        {
+            return cam.pixelRect.center;
+        }
+       
+        public Vector2 ScreenToWorldPosition(Vector2 screenPosition) 
+        {
+            return cam.ScreenToWorldPoint(screenPosition);
+        }
+
         private void OnDestroy()
         {
             cameraSafeArea.OnSafeAreaChanged -= RefitCamera;

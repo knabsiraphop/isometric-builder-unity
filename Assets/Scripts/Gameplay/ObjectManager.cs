@@ -1,0 +1,72 @@
+using IsoBuilder.Core;
+using System.Collections.Generic;
+using UnityEngine;
+
+namespace IsoBuilder.Gameplay
+{
+    public class ObjectManager : MonoBehaviour
+    {
+        [SerializeField] private PlacedItem placedItemPrefab;
+
+        private OccupancyGrid occupancyGrid;
+        private PlacementRules placementRules;
+        private MapController mapController;
+
+        private List<PlacedItem> placedItems;
+        private List<int> stationPlacedItems;
+
+        private int currentOwnerId = 0;
+
+        public void Initialize(MapController mapController)
+        {
+            this.mapController = mapController;
+            occupancyGrid = new OccupancyGrid();
+            placementRules = new PlacementRules(mapController, occupancyGrid);
+
+            placedItems = new List<PlacedItem>();
+            stationPlacedItems = new List<int>();
+        }
+
+        public bool TryCreatePlacedItem(ItemData itemData, Sprite sprite, out PlacedItem placedItem)
+        {
+            if(itemData.Type == ItemType.Station)
+            {
+                if(stationPlacedItems.Contains(itemData.Id))
+                {
+                    placedItem = null;
+                    Debug.LogWarning($"Station item with ID {itemData.Id} has already been placed. Cannot place another one.");
+                    return false;
+                }
+            }
+
+            placedItem = Instantiate(placedItemPrefab, transform);
+            placedItem.Initialize(itemData, sprite, GetNextOwnerId());
+
+            return true;
+        }
+
+        public void OnConfirmPlacedItem(PlacedItem placedItem) 
+        {
+            placedItems.Add(placedItem);
+            if(placedItem.ItemData.Type == ItemType.Station)
+            {
+                stationPlacedItems.Add(placedItem.ItemData.Id);
+            }
+        }
+
+        public void OnRemovePlacedItem(PlacedItem placedItem)
+        {
+            placedItems.Remove(placedItem);
+            if(placedItem.ItemData.Type == ItemType.Station)
+            {
+                stationPlacedItems.Remove(placedItem.ItemData.Id);
+            }
+        }
+
+        private int GetNextOwnerId()
+        {
+            currentOwnerId++;
+            return currentOwnerId;
+        }
+    }
+}

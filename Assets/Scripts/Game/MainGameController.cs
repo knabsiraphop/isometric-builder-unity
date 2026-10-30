@@ -13,6 +13,7 @@ namespace IsoBuilder
         [SerializeField] private CameraController cameraController;
         [SerializeField] private GameConfig gameConfig;
         [SerializeField] private PlacementController placementController;
+        [SerializeField] private ObjectManager objectManager;
 
         private ItemCatalog itemCatalog;
         private ItemSpriteLoader itemSpriteLoader;
@@ -29,7 +30,9 @@ namespace IsoBuilder
             cameraController.Initialize();
             cameraController.FitToBounds(mapController.GetMapBounds());
 
-            placementController.Initialize(uiManager, itemCatalog, itemSpriteLoader);
+            objectManager.Initialize(mapController);
+
+            placementController.Initialize(uiManager, itemCatalog, itemSpriteLoader, mapController, objectManager, cameraController);
             await placementController.ShowItemCatalogs();
             
             uiManager.SetActiveLoadingScreen(false);
