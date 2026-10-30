@@ -85,7 +85,7 @@ namespace IsoBuilder.Gameplay
                 }
                 else
                 {
-                    TileBase result = resourceRequest.asset as TileBase;
+                    TileBase result = (TileBase)resourceRequest.asset;
                     tileBases[id] = result;
                 }
             }
