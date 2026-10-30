@@ -616,8 +616,8 @@ TilemapRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: 465206801
+  m_SortingLayer: 1
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_ChunkSize: {x: 32, y: 32, z: 32}
@@ -10144,7 +10144,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e8256246b06c4ee40a8cf9232f66f783, type: 3}
   m_Name: 
   m_EditorClassIdentifier: IsoBuilder.Gameplay::IsoBuilder.Gameplay.MapSetup
-  config: {fileID: 11400000, guid: 6cc467d08d92fd444835b6a6dd812453, type: 2}
   zoneTilemap: {fileID: 1273349598}
   zoneGrid: {fileID: 974906045}
   zoneGridRenderer: {fileID: 1273349597}
