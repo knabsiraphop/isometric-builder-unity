@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: IsoBuilder.Core::IsoBuilder.Core.ItemConfig
   itemDatas:
   - Id: 1
-    FootPrint: {x: 1, y: 1}
+    FootPrint: {x: 1, y: 3}
     Type: 1
     SpriteOffset: {x: -0.58, y: 0.76}
   - Id: 2
@@ -50,7 +50,7 @@ MonoBehaviour:
     Type: 1
     SpriteOffset: {x: 0.09, y: 1.35}
   - Id: 10
-    FootPrint: {x: 2, y: 4}
+    FootPrint: {x: 2, y: 3}
     Type: 1
     SpriteOffset: {x: -0.25, y: 1.66}
   - Id: 11

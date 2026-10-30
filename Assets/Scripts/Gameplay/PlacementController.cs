@@ -16,6 +16,8 @@ namespace IsoBuilder.Gameplay
             public bool flipped = false;
         }
 
+        [SerializeField] private CellHighlighter cellHighlighter;
+
         private IUIManager uiManager;
         private ItemCatalog itemCatalog;
         private ItemSpriteLoader itemSpriteLoader;
@@ -69,6 +71,8 @@ namespace IsoBuilder.Gameplay
                 Vector3 worldCellPosition = mapController.CellToWorld(cellOrigin);
 
                 placedItem.SetPlacement(cellOrigin, false, worldCellPosition);
+                bool canPlace = objectManager.CanPlaceItem(placedItem, cellOrigin, false);
+                cellHighlighter.HighlightCells(placedItem.ItemData.GetCells(cellOrigin, false), canPlace);
                 CreateNewPlacementStatus(item, placedItem, cellOrigin);
             }
         }
@@ -79,6 +83,7 @@ namespace IsoBuilder.Gameplay
                 return;
             Destroy(currentPlacementStatus.placedItem.gameObject);
             currentPlacementStatus = null;
+            cellHighlighter.ClearAllHighlights();
         }
 
         private void CreateNewPlacementStatus(ItemData item, PlacedItem placedItem, Vector2Int cellOrigin)
