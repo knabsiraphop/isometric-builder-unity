@@ -29,9 +29,9 @@ namespace IsoBuilder.Gameplay
 
         public bool TryCreatePlacedItem(ItemData itemData, Sprite sprite, out PlacedItem placedItem)
         {
-            if(itemData.Type == ItemType.Station)
+            if (itemData.Type == ItemType.Station)
             {
-                if(stationPlacedItems.Contains(itemData.Id))
+                if (stationPlacedItems.Contains(itemData.Id))
                 {
                     placedItem = null;
                     Debug.LogWarning($"Station item with ID {itemData.Id} has already been placed. Cannot place another one.");
@@ -45,10 +45,10 @@ namespace IsoBuilder.Gameplay
             return true;
         }
 
-        public void OnConfirmPlacedItem(PlacedItem placedItem) 
+        public void OnConfirmPlacedItem(PlacedItem placedItem)
         {
             placedItems.Add(placedItem);
-            if(placedItem.ItemData.Type == ItemType.Station)
+            if (placedItem.ItemData.Type == ItemType.Station)
             {
                 stationPlacedItems.Add(placedItem.ItemData.Id);
             }
@@ -57,10 +57,15 @@ namespace IsoBuilder.Gameplay
         public void OnRemovePlacedItem(PlacedItem placedItem)
         {
             placedItems.Remove(placedItem);
-            if(placedItem.ItemData.Type == ItemType.Station)
+            if (placedItem.ItemData.Type == ItemType.Station)
             {
                 stationPlacedItems.Remove(placedItem.ItemData.Id);
             }
+        }
+
+        public bool CanPlaceItem(PlacedItem placedItem, Vector2Int origin, bool flipped)
+        {
+            return placementRules.CanPlaceItem(origin, placedItem.ItemData, flipped, placedItem.OwnerId);
         }
 
         private int GetNextOwnerId()

@@ -1,6 +1,7 @@
 using Cysharp.Threading.Tasks;
 using IsoBuilder.Core;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace IsoBuilder.Gameplay
@@ -37,24 +38,28 @@ namespace IsoBuilder.Gameplay
 
         public async UniTask ShowItemCatalogs()
         {
-            if (itemCatalog != null && uiManager != null)
+            IEnumerable<ItemData> items = itemCatalog.GetItems();
+
+            foreach (ItemData item in items)
             {
-                foreach (ItemData item in itemCatalog.GetItems())
-                {
-                    Sprite itemSprite = await itemSpriteLoader.GetSprite(item);
-                    uiManager.AddItemsToList(itemSprite, () => PlaceItem(item).Forget());
-                }
+                Sprite itemSprite = await itemSpriteLoader.GetSprite(item);
+                uiManager.AddItemsToList(itemSprite, () => PlaceItem(item));
             }
         }
 
-        private async UniTaskVoid PlaceItem(ItemData item)
+        private void PlaceItem(ItemData item)
         {
             if (currentPlacementStatus != null)
             {
                 ClearCurrentPlacement();
             }
 
-            Sprite itemSprite = await itemSpriteLoader.GetSprite(item);
+            Sprite itemSprite = itemSpriteLoader.GetCacheSprite(item);
+            if (itemSprite == null)
+            {
+                Debug.LogError($"Sprite not found for item: {item.Id}");
+                return;
+            }
             if (objectManager.TryCreatePlacedItem(item, itemSprite, out PlacedItem placedItem))
             {
                 Vector2 screenCenter = cameraController.GetScreenCenter();

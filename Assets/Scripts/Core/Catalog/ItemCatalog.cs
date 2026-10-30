@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 
 namespace IsoBuilder.Core
 {
@@ -10,7 +11,9 @@ namespace IsoBuilder.Core
         {
             itemDatas = new Dictionary<int, ItemData>();
 
-            foreach (ItemData item in itemConfig.ItemDatas)
+            IOrderedEnumerable<ItemData> sortItems = itemConfig.ItemDatas.OrderBy(item => item.Id);
+
+            foreach (ItemData item in sortItems)
             {
                 itemDatas[item.Id] = item;
             }
