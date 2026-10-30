@@ -81,7 +81,7 @@ namespace IsoBuilder.Gameplay
                 await resourceRequest.ToUniTask();
                 if (resourceRequest.asset == null)
                 {
-                    Debug.LogWarning($"Tile with id {id} not found in Resources/Tile/Tile_{id}");
+                    Debug.LogError($"Tile with id {id} not found in Resources/Tile/Tile_{id}");
                 }
                 else
                 {
@@ -115,6 +115,17 @@ namespace IsoBuilder.Gameplay
                 return false;
             }
             return gridDatas.TryGetValue(gridPosition, out zoneType);
+        }
+
+        public Vector3 CellToWorld(Vector2Int cellPosition)
+        {
+            return zoneGrid.GetCellCenterWorld(new Vector3Int(cellPosition.x, cellPosition.y, 0));
+        }
+
+        public Vector2Int WorldToCell(Vector3 worldPosition)
+        {
+            Vector3Int cellPosition = zoneGrid.WorldToCell(new Vector3(worldPosition.x, worldPosition.y, 0));
+            return new Vector2Int(cellPosition.x, cellPosition.y);
         }
     }
 }
