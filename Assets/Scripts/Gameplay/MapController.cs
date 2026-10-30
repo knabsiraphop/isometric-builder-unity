@@ -119,7 +119,8 @@ namespace IsoBuilder.Gameplay
 
         public Vector3 CellToWorld(Vector2Int cellPosition)
         {
-            return zoneGrid.GetCellCenterWorld(new Vector3Int(cellPosition.x, cellPosition.y, 0));
+            Vector3 worldPosition = zoneGrid.GetCellCenterWorld(new Vector3Int(cellPosition.x, cellPosition.y, 0));
+            return new Vector3(worldPosition.x, worldPosition.y, 0);
         }
 
         public Vector2Int WorldToCell(Vector3 worldPosition)
