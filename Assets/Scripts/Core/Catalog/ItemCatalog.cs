@@ -20,5 +20,10 @@ namespace IsoBuilder.Core
         {
             return itemDatas.TryGetValue(id, out itemData);
         }
+
+        public IEnumerable<ItemData> GetItems()
+        {
+            return itemDatas.Values;
+        }
     }
 }
