@@ -25,7 +25,7 @@ namespace IsoBuilder.Gameplay
 
         private void RefitCamera()
         {
-            const float boundsPadding = 1.05f;
+            const float boundsPadding = 1.1f;
 
             if (mapBounds.Equals(default))
                 return;

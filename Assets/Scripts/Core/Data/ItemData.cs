@@ -9,5 +9,6 @@ namespace IsoBuilder.Core
         public int Id;
         public Vector2Int FootPrint;
         public ItemType Type;
+        public Vector2 SpriteOffset;
     }
 }
