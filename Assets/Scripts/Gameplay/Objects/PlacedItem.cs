@@ -1,4 +1,5 @@
 using IsoBuilder.Core;
+using System;
 using UnityEngine;
 
 namespace IsoBuilder.Gameplay
@@ -6,6 +7,8 @@ namespace IsoBuilder.Gameplay
     public class PlacedItem : MonoBehaviour
     {
         [SerializeField] private SpriteRenderer spriteRenderer;
+        [SerializeField] private BoxCollider2D boxCollider;
+        [SerializeField] private PlacedItemPointer placedItemPointer;
 
         public ItemData ItemData { get; private set; }
         public int OwnerId { get; private set; }
@@ -20,12 +23,19 @@ namespace IsoBuilder.Gameplay
             OwnerId = ownerId;
 
             spriteRenderer.sprite = sprite;
+
+            Bounds spriteBound = spriteRenderer.sprite.bounds;
+            boxCollider.offset = new Vector2(spriteBound.center.x, spriteBound.center.y);
+            boxCollider.size = new Vector2(spriteBound.size.x, spriteBound.size.y);
+        }
+
+        public void InitializePointer(Action<PlacedItem> onItemPressed)
+        {
+            placedItemPointer.Initialize(onItemPressed, this);
         }
 
         public void SetPlacement(Vector2Int originCell, bool flipped, Vector3 worldCellPosition)
         {
-            const int MaxSortingOrder = 100;
-
             OriginCell = originCell;
             Flipped = flipped;
             WorldCellPosition = worldCellPosition;

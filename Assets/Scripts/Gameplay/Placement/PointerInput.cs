@@ -1,14 +1,26 @@
+using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
 
 namespace IsoBuilder.Gameplay
 {
     public class PointerInput
     {
+        private PointerEventData pointerEventData;
+        private List<RaycastResult> raycastResults;
+
         private bool IsTouch => Touchscreen.current != null &&
             (Touchscreen.current.primaryTouch.press.isPressed || Touchscreen.current.primaryTouch.press.wasPressedThisFrame
             || Touchscreen.current.primaryTouch.press.wasReleasedThisFrame);
         private bool IsMouse => Mouse.current != null;
+
+        public PointerInput()
+        {
+            pointerEventData = new(EventSystem.current);
+            raycastResults = new();
+        }
 
         public Vector2 CurrentPosition()
         {
@@ -46,11 +58,18 @@ namespace IsoBuilder.Gameplay
             return false;
         }
 
-        public int PointerId()
+        public bool IsPointerOverUI()
         {
-            if (IsTouch)
-                return Touchscreen.current.primaryTouch.touchId.ReadValue();
-            return -1;
+            pointerEventData.position = CurrentPosition();
+            EventSystem.current.RaycastAll(pointerEventData, raycastResults);
+            foreach (RaycastResult result in raycastResults)
+            {
+                if (result.module is GraphicRaycaster)
+                {
+                    return true;
+                }
+            }
+            return false;
         }
     }
 }

@@ -69,6 +69,16 @@ namespace IsoBuilder.Gameplay
             }
         }
 
+        public void OnConfirmMovePlacedItem(PlacedItem placedItem, Vector2Int previousCellOrigin, bool previousFlipped)
+        {
+            IReadOnlyList<Vector2Int> cells = placedItem.ItemData.GetCells(previousCellOrigin, previousFlipped);
+            foreach (Vector2Int cell in cells)
+                occupancyGrid.Release(cell, placedItem.OwnerId);
+            cells = placedItem.ItemData.GetCells(placedItem.OriginCell, placedItem.Flipped);
+            foreach (Vector2Int cell in cells)
+                occupancyGrid.Occupy(cell, placedItem.OwnerId);
+        }
+
         public bool IsItemConfirm(PlacedItem placedItem) => placedItems.Contains(placedItem);
 
         public bool CanPlaceItem(PlacedItem placedItem, Vector2Int origin, bool flipped)

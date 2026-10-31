@@ -1,14 +1,20 @@
 using Cysharp.Threading.Tasks;
 using IsoBuilder.Core;
 using System.Collections.Generic;
-using System.Runtime.Serialization;
 using UnityEngine;
-using UnityEngine.EventSystems;
 
 namespace IsoBuilder.Gameplay
 {
     public class PlacementController : MonoBehaviour
     {
+        private struct CurrentSelectedItemData
+        {
+            public bool hasSnapShot;
+            public Vector2Int cellOrigin;
+            public bool flipped;
+            public Vector3 worldPosition;
+        }
+
         [SerializeField] private CellHighlighter cellHighlighter;
 
         private IUIManager uiManager;
@@ -19,8 +25,10 @@ namespace IsoBuilder.Gameplay
         private CameraController cameraController;
         private PointerInput pointerInput;
         private ItemDragger itemDragger;
+        private ItemPressDetector itemPressDetector;
 
         private PlacedItem currentPlacementItem;
+        private CurrentSelectedItemData currentSelectedItemData;
 
         public void Initialize(IUIManager uiManager, ItemCatalog itemCatalog, ItemSpriteLoader itemSpriteLoader,
             MapController mapController, ObjectManager objectManager, CameraController cameraController)
@@ -34,6 +42,7 @@ namespace IsoBuilder.Gameplay
 
             pointerInput = new PointerInput();
             itemDragger = new(cameraController, pointerInput, mapController);
+            itemPressDetector = new(pointerInput, SelectItem);
         }
 
         public async UniTask ShowItemCatalogs()
@@ -49,11 +58,6 @@ namespace IsoBuilder.Gameplay
 
         private void PlaceItem(ItemData item)
         {
-            if (currentPlacementItem != null)
-            {
-                ClearCurrentPlacement();
-            }
-
             Sprite itemSprite = itemSpriteLoader.GetCacheSprite(item);
             if (itemSprite == null)
             {
@@ -66,10 +70,28 @@ namespace IsoBuilder.Gameplay
                 Vector2 worldPosition = cameraController.ScreenToWorldPosition(screenCenter);
                 Vector2Int cellOrigin = mapController.WorldToCell(worldPosition);
                 SetItemPlacement(cellOrigin, placedItem);
+                SelectItem(placedItem);
+            }
+        }
 
-                uiManager.ShowPlacementPanel(ConfirmPlacement, CancelPlacement, FlipPlacement);
+        private void SelectItem(PlacedItem placedItem)
+        {
+            if (placedItem == currentPlacementItem)
+                return;
 
-                currentPlacementItem = placedItem;
+            if (currentPlacementItem != null)
+            {
+                ClearCurrentPlacement();
+            }
+            SetHighlight(placedItem);
+            currentPlacementItem = placedItem;
+            uiManager.ShowPlacementPanel(ConfirmPlacement, CancelPlacement, FlipPlacement);
+            if (objectManager.IsItemConfirm(placedItem))
+            {
+                currentSelectedItemData.hasSnapShot = true;
+                currentSelectedItemData.cellOrigin = placedItem.OriginCell;
+                currentSelectedItemData.flipped = placedItem.Flipped;
+                currentSelectedItemData.worldPosition = placedItem.WorldCellPosition;
             }
         }
 
@@ -80,15 +102,18 @@ namespace IsoBuilder.Gameplay
                 Debug.LogError("Can't Place Item");
                 return;
             }
-            objectManager.OnConfirmPlacedItem(currentPlacementItem);
+            if (objectManager.IsItemConfirm(currentPlacementItem))
+                objectManager.OnConfirmMovePlacedItem(currentPlacementItem, currentSelectedItemData.cellOrigin, currentSelectedItemData.flipped);
+            else
+                objectManager.OnConfirmPlacedItem(currentPlacementItem);
+            currentPlacementItem.InitializePointer(itemPressDetector.OnItemPressed);
+            currentSelectedItemData.hasSnapShot = false;
             ClearCurrentPlacement();
         }
 
         private void CancelPlacement()
         {
             ClearCurrentPlacement();
-            uiManager.HidePlacementPanel();
-            cellHighlighter.ClearAllHighlights();
         }
 
         private void FlipPlacement()
@@ -102,7 +127,19 @@ namespace IsoBuilder.Gameplay
             if (currentPlacementItem == null)
                 return;
             if (!objectManager.IsItemConfirm(currentPlacementItem))
+            {
                 Destroy(currentPlacementItem.gameObject);
+            }
+            else
+            {
+                if (currentSelectedItemData.hasSnapShot)
+                {
+                    currentPlacementItem.SetPlacement(currentSelectedItemData.cellOrigin, currentSelectedItemData.flipped,
+                        currentSelectedItemData.worldPosition);
+                    currentSelectedItemData.hasSnapShot = false;
+                }
+            }
+
             currentPlacementItem = null;
             cellHighlighter.ClearAllHighlights();
             uiManager.HidePlacementPanel();
@@ -111,24 +148,28 @@ namespace IsoBuilder.Gameplay
 
         private void Update()
         {
-            if (pointerInput == null || currentPlacementItem == null)
+            if (pointerInput == null)
                 return;
             if (pointerInput.WasPressedThisFrame())
             {
-                itemDragger.OnPressedThisFrame(currentPlacementItem.WorldCellPosition);
+                itemDragger.OnPressedThisFrame(currentPlacementItem);
+                itemPressDetector.OnPressedThisFrame();
             }
 
             if (pointerInput.IsPressed())
             {
-                if (itemDragger.TryGetNewCellOrigin(currentPlacementItem.OriginCell, out Vector2Int newCellOrigin))
+                if (itemDragger.TryGetNewCellOrigin(currentPlacementItem, out Vector2Int newCellOrigin))
                 {
                     SetItemPlacement(newCellOrigin, currentPlacementItem);
+                    SetHighlight(currentPlacementItem);
                 }
+                itemPressDetector.OnPressed();
             }
 
             if (pointerInput.WasReleasedThisFrame())
             {
                 itemDragger.OnReleasedThisFrame();
+                itemPressDetector.OnReleasedThisFrame();
             }
         }
 
@@ -136,7 +177,6 @@ namespace IsoBuilder.Gameplay
         {
             Vector3 worldCellPosition = mapController.CellToWorld(cellOrigin);
             placedItem.SetPlacement(cellOrigin, placedItem.Flipped, worldCellPosition);
-            SetHighlight(placedItem);
         }
 
         private void SetHighlight(PlacedItem placedItem)

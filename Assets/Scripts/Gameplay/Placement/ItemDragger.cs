@@ -1,5 +1,7 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 namespace IsoBuilder.Gameplay
 {
@@ -20,19 +22,19 @@ namespace IsoBuilder.Gameplay
             this.mapController = mapController;
         }
 
-        public void OnPressedThisFrame(Vector3 worldOriginCellPosition)
+        public void OnPressedThisFrame(PlacedItem placedItem)
         {
-            if (EventSystem.current.IsPointerOverGameObject(pointerInput.PointerId()))
+            if (pointerInput.IsPointerOverUI() || placedItem == null)
                 return;
             startPointerWorld = cameraController.ScreenToWorldPosition(pointerInput.CurrentPosition());
-            startItemWorld = worldOriginCellPosition;
+            startItemWorld = placedItem.WorldCellPosition;
             isDrag = true;
         }
 
-        public bool TryGetNewCellOrigin(Vector2Int originCell, out Vector2Int newCellOrigin)
+        public bool TryGetNewCellOrigin(PlacedItem placedItem, out Vector2Int newCellOrigin)
         {
             newCellOrigin = Vector2Int.zero;
-            if (!isDrag)
+            if (!isDrag || placedItem == null)
                 return false;
 
             Vector3 currentPosition = cameraController.ScreenToWorldPosition(pointerInput.CurrentPosition());
@@ -40,7 +42,7 @@ namespace IsoBuilder.Gameplay
             Vector3 newWorldPosition = startItemWorld + diff;
             newCellOrigin = mapController.WorldToCell(newWorldPosition);
 
-            return newCellOrigin != originCell;
+            return newCellOrigin != placedItem.OriginCell;
         }
 
         public void OnReleasedThisFrame()

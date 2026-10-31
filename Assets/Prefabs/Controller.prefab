@@ -1,0 +1,143 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &2079255584157472638
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6542055151474341939}
+  - component: {fileID: 8595909128493165503}
+  - component: {fileID: 2881234622690538163}
+  - component: {fileID: 1802342315110938309}
+  - component: {fileID: 680347468578143452}
+  - component: {fileID: 309171556349217334}
+  - component: {fileID: 8577697895417561515}
+  - component: {fileID: 6433639274800368112}
+  m_Layer: 0
+  m_Name: Controller
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6542055151474341939
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2079255584157472638}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8595909128493165503
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2079255584157472638}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e0b0a11ef592136458834b7f25f37a15, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: ISOBuilder.Game::ISOBuilder.Game.MainGameController
+  uiManager: {fileID: 2881234622690538163}
+  mapController: {fileID: 1802342315110938309}
+  cameraController: {fileID: 680347468578143452}
+  gameConfig: {fileID: 11400000, guid: 6875777028452e248aae92cedf6218cc, type: 2}
+  placementController: {fileID: 309171556349217334}
+  objectManager: {fileID: 8577697895417561515}
+--- !u!114 &2881234622690538163
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2079255584157472638}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d1e452fb2c109d54baa70a531e9c43f3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: ISOBuilder.UI::UIManager
+  loadingScreen: {fileID: 0}
+  uiItemCatalog: {fileID: 0}
+  uiPlacementPanel: {fileID: 0}
+--- !u!114 &1802342315110938309
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2079255584157472638}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e8256246b06c4ee40a8cf9232f66f783, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: IsoBuilder.Gameplay::IsoBuilder.Gameplay.MapSetup
+  zoneTilemap: {fileID: 0}
+  zoneGrid: {fileID: 0}
+  zoneGridRenderer: {fileID: 0}
+--- !u!114 &680347468578143452
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2079255584157472638}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fc33f8f092e66a44d911d252477e6906, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: IsoBuilder.Gameplay::IsoBuilder.Gameplay.CameraController
+  cam: {fileID: 0}
+  cameraSafeArea: {fileID: 0}
+--- !u!114 &309171556349217334
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2079255584157472638}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2ac0522fefcc4334c900f13cd4eb1e5c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: IsoBuilder.Gameplay::IsoBuilder.Gameplay.PlacementController
+  cellHighlighter: {fileID: 6433639274800368112}
+--- !u!114 &8577697895417561515
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2079255584157472638}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a4b9003b40d68154d9e1f2a748eef0d6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: IsoBuilder.Gameplay::IsoBuilder.Gameplay.ObjectManager
+  placedItemPrefab: {fileID: 638839418032058676, guid: df233c88b55b53341ab90e1e2a55ab40, type: 3}
+--- !u!114 &6433639274800368112
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2079255584157472638}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ffdd51d7cc872004eaab8b720d643516, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: IsoBuilder.Gameplay::IsoBuilder.Gameplay.CellHighlighter
+  highlightTileMap: {fileID: 0}
+  canPlaceTile: {fileID: 11400000, guid: 5a1c0d7e3b2f4a8c9e6d1f0b2a3c4d5e, type: 2}
+  cannotPlaceTile: {fileID: 11400000, guid: 6b2d1e8f4c3a5b9d0f7e2a1c3b4d5e6f, type: 2}
