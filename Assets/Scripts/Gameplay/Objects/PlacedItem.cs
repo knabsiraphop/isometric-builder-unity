@@ -11,7 +11,7 @@ namespace IsoBuilder.Gameplay
         public int OwnerId { get; private set; }
 
         public Vector2Int OriginCell { get; private set; }
-        public bool Flipped { get; private set; }
+        public bool Flipped { get; private set; } = false;
         public Vector3 WorldCellPosition { get; private set; }
 
         public void Initialize(ItemData itemData, Sprite sprite, int ownerId)

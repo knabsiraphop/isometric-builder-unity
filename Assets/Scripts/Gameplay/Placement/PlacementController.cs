@@ -1,7 +1,9 @@
 using Cysharp.Threading.Tasks;
 using IsoBuilder.Core;
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 namespace IsoBuilder.Gameplay
 {
@@ -15,6 +17,8 @@ namespace IsoBuilder.Gameplay
         private MapController mapController;
         private ObjectManager objectManager;
         private CameraController cameraController;
+        private PointerInput pointerInput;
+        private ItemDragger itemDragger;
 
         private PlacedItem currentPlacementItem;
 
@@ -27,6 +31,9 @@ namespace IsoBuilder.Gameplay
             this.mapController = mapController;
             this.objectManager = objectManager;
             this.cameraController = cameraController;
+
+            pointerInput = new PointerInput();
+            itemDragger = new(cameraController, pointerInput, mapController);
         }
 
         public async UniTask ShowItemCatalogs()
@@ -57,14 +64,8 @@ namespace IsoBuilder.Gameplay
             {
                 Vector2 screenCenter = cameraController.GetScreenCenter();
                 Vector2 worldPosition = cameraController.ScreenToWorldPosition(screenCenter);
-
                 Vector2Int cellOrigin = mapController.WorldToCell(worldPosition);
-                Vector3 worldCellPosition = mapController.CellToWorld(cellOrigin);
-
-                placedItem.SetPlacement(cellOrigin, false, worldCellPosition);
-
-                bool canPlace = objectManager.CanPlaceItem(placedItem, cellOrigin, false);
-                cellHighlighter.HighlightCells(placedItem.ItemData.GetCells(cellOrigin, false), canPlace);
+                SetItemPlacement(cellOrigin, placedItem);
 
                 uiManager.ShowPlacementPanel(ConfirmPlacement, CancelPlacement, FlipPlacement);
 
@@ -93,10 +94,7 @@ namespace IsoBuilder.Gameplay
         private void FlipPlacement()
         {
             currentPlacementItem.SetPlacement(currentPlacementItem.OriginCell, !currentPlacementItem.Flipped, currentPlacementItem.WorldCellPosition);
-
-            cellHighlighter.ClearAllHighlights();
-            bool canPlace = objectManager.CanPlaceItem(currentPlacementItem, currentPlacementItem.OriginCell, currentPlacementItem.Flipped);
-            cellHighlighter.HighlightCells(currentPlacementItem.ItemData.GetCells(currentPlacementItem.OriginCell, currentPlacementItem.Flipped), canPlace);
+            SetHighlight(currentPlacementItem);
         }
 
         private void ClearCurrentPlacement()
@@ -108,6 +106,44 @@ namespace IsoBuilder.Gameplay
             currentPlacementItem = null;
             cellHighlighter.ClearAllHighlights();
             uiManager.HidePlacementPanel();
+            itemDragger.Reset();
+        }
+
+        private void Update()
+        {
+            if (pointerInput == null || currentPlacementItem == null)
+                return;
+            if (pointerInput.WasPressedThisFrame())
+            {
+                itemDragger.OnPressedThisFrame(currentPlacementItem.WorldCellPosition);
+            }
+
+            if (pointerInput.IsPressed())
+            {
+                if (itemDragger.TryGetNewCellOrigin(currentPlacementItem.OriginCell, out Vector2Int newCellOrigin))
+                {
+                    SetItemPlacement(newCellOrigin, currentPlacementItem);
+                }
+            }
+
+            if (pointerInput.WasReleasedThisFrame())
+            {
+                itemDragger.OnReleasedThisFrame();
+            }
+        }
+
+        private void SetItemPlacement(Vector2Int cellOrigin, PlacedItem placedItem)
+        {
+            Vector3 worldCellPosition = mapController.CellToWorld(cellOrigin);
+            placedItem.SetPlacement(cellOrigin, placedItem.Flipped, worldCellPosition);
+            SetHighlight(placedItem);
+        }
+
+        private void SetHighlight(PlacedItem placedItem)
+        {
+            cellHighlighter.ClearAllHighlights();
+            bool canPlace = objectManager.CanPlaceItem(placedItem, placedItem.OriginCell, placedItem.Flipped);
+            cellHighlighter.HighlightCells(placedItem.ItemData.GetCells(placedItem.OriginCell, placedItem.Flipped), canPlace);
         }
     }
 }
