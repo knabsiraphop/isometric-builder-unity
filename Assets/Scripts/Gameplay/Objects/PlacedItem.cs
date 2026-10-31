@@ -6,6 +6,8 @@ namespace IsoBuilder.Gameplay
 {
     public class PlacedItem : MonoBehaviour
     {
+        private const int MaxSortingOrder = 1000;
+
         [SerializeField] private SpriteRenderer spriteRenderer;
         [SerializeField] private BoxCollider2D boxCollider;
         [SerializeField] private PlacedItemPointer placedItemPointer;
@@ -16,6 +18,9 @@ namespace IsoBuilder.Gameplay
         public Vector2Int OriginCell { get; private set; }
         public bool Flipped { get; private set; } = false;
         public Vector3 WorldCellPosition { get; private set; }
+        public Vector2Int CellMin { get; private set; }
+        public Vector2Int CellMax { get; private set; }
+        public Rect WorldRect { get; private set; }
 
         public void Initialize(ItemData itemData, Sprite sprite, int ownerId)
         {
@@ -43,7 +48,18 @@ namespace IsoBuilder.Gameplay
             Vector2 offset = flipped ? new Vector2(ItemData.SpriteOffset.x * -1f, ItemData.SpriteOffset.y) : ItemData.SpriteOffset;
             transform.position = worldCellPosition + (Vector3)offset;
             spriteRenderer.flipX = flipped;
-            spriteRenderer.sortingOrder = MaxSortingOrder - (OriginCell.x + OriginCell.y);
+
+            CellMin = originCell;
+            Vector2Int footprint = flipped ? new Vector2Int(ItemData.FootPrint.y - 1, ItemData.FootPrint.x - 1) :
+                new Vector2Int(ItemData.FootPrint.x - 1, ItemData.FootPrint.y - 1);
+            CellMax = originCell + footprint;
+
+            spriteRenderer.sortingOrder = MaxSortingOrder - (CellMin.x + CellMax.x + CellMin.y + CellMax.y);
+        }
+
+        public void SetSortingOrder(int order)
+        {
+            spriteRenderer.sortingOrder = order;
         }
     }
 }
