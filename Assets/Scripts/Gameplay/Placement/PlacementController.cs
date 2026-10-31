@@ -1,21 +1,12 @@
 using Cysharp.Threading.Tasks;
 using IsoBuilder.Core;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 namespace IsoBuilder.Gameplay
 {
     public class PlacementController : MonoBehaviour
     {
-        private class PlacementStatus
-        {
-            public int itemId;
-            public PlacedItem placedItem;
-            public Vector2Int origin;
-            public bool flipped = false;
-        }
-
         [SerializeField] private CellHighlighter cellHighlighter;
 
         private IUIManager uiManager;
@@ -25,7 +16,7 @@ namespace IsoBuilder.Gameplay
         private ObjectManager objectManager;
         private CameraController cameraController;
 
-        private PlacementStatus currentPlacementStatus;
+        private PlacedItem currentPlacementItem;
 
         public void Initialize(IUIManager uiManager, ItemCatalog itemCatalog, ItemSpriteLoader itemSpriteLoader,
             MapController mapController, ObjectManager objectManager, CameraController cameraController)
@@ -51,7 +42,7 @@ namespace IsoBuilder.Gameplay
 
         private void PlaceItem(ItemData item)
         {
-            if (currentPlacementStatus != null)
+            if (currentPlacementItem != null)
             {
                 ClearCurrentPlacement();
             }
@@ -71,30 +62,52 @@ namespace IsoBuilder.Gameplay
                 Vector3 worldCellPosition = mapController.CellToWorld(cellOrigin);
 
                 placedItem.SetPlacement(cellOrigin, false, worldCellPosition);
+
                 bool canPlace = objectManager.CanPlaceItem(placedItem, cellOrigin, false);
                 cellHighlighter.HighlightCells(placedItem.ItemData.GetCells(cellOrigin, false), canPlace);
-                CreateNewPlacementStatus(item, placedItem, cellOrigin);
+
+                uiManager.ShowPlacementPanel(ConfirmPlacement, CancelPlacement, FlipPlacement);
+
+                currentPlacementItem = placedItem;
             }
+        }
+
+        private void ConfirmPlacement()
+        {
+            if (!objectManager.CanPlaceItem(currentPlacementItem, currentPlacementItem.OriginCell, currentPlacementItem.Flipped))
+            {
+                Debug.LogError("Can't Place Item");
+                return;
+            }
+            objectManager.OnConfirmPlacedItem(currentPlacementItem);
+            ClearCurrentPlacement();
+        }
+
+        private void CancelPlacement()
+        {
+            ClearCurrentPlacement();
+            uiManager.HidePlacementPanel();
+            cellHighlighter.ClearAllHighlights();
+        }
+
+        private void FlipPlacement()
+        {
+            currentPlacementItem.SetPlacement(currentPlacementItem.OriginCell, !currentPlacementItem.Flipped, currentPlacementItem.WorldCellPosition);
+
+            cellHighlighter.ClearAllHighlights();
+            bool canPlace = objectManager.CanPlaceItem(currentPlacementItem, currentPlacementItem.OriginCell, currentPlacementItem.Flipped);
+            cellHighlighter.HighlightCells(currentPlacementItem.ItemData.GetCells(currentPlacementItem.OriginCell, currentPlacementItem.Flipped), canPlace);
         }
 
         private void ClearCurrentPlacement()
         {
-            if (currentPlacementStatus == null)
+            if (currentPlacementItem == null)
                 return;
-            Destroy(currentPlacementStatus.placedItem.gameObject);
-            currentPlacementStatus = null;
+            if (!objectManager.IsItemConfirm(currentPlacementItem))
+                Destroy(currentPlacementItem.gameObject);
+            currentPlacementItem = null;
             cellHighlighter.ClearAllHighlights();
-        }
-
-        private void CreateNewPlacementStatus(ItemData item, PlacedItem placedItem, Vector2Int cellOrigin)
-        {
-            currentPlacementStatus = new PlacementStatus
-            {
-                itemId = item.Id,
-                placedItem = placedItem,
-                origin = cellOrigin,
-                flipped = false
-            };
+            uiManager.HidePlacementPanel();
         }
     }
 }

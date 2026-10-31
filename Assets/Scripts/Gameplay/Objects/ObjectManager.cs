@@ -47,6 +47,9 @@ namespace IsoBuilder.Gameplay
 
         public void OnConfirmPlacedItem(PlacedItem placedItem)
         {
+            IReadOnlyList<Vector2Int> cells = placedItem.ItemData.GetCells(placedItem.OriginCell, placedItem.Flipped);
+            foreach (Vector2Int cell in cells)
+                occupancyGrid.Occupy(cell, placedItem.OwnerId);
             placedItems.Add(placedItem);
             if (placedItem.ItemData.Type == ItemType.Station)
             {
@@ -56,12 +59,17 @@ namespace IsoBuilder.Gameplay
 
         public void OnRemovePlacedItem(PlacedItem placedItem)
         {
+            IReadOnlyList<Vector2Int> cells = placedItem.ItemData.GetCells(placedItem.OriginCell, placedItem.Flipped);
+            foreach (Vector2Int cell in cells)
+                occupancyGrid.Release(cell, placedItem.OwnerId);
             placedItems.Remove(placedItem);
             if (placedItem.ItemData.Type == ItemType.Station)
             {
                 stationPlacedItems.Remove(placedItem.ItemData.Id);
             }
         }
+
+        public bool IsItemConfirm(PlacedItem placedItem) => placedItems.Contains(placedItem);
 
         public bool CanPlaceItem(PlacedItem placedItem, Vector2Int origin, bool flipped)
         {

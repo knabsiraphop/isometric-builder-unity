@@ -8,6 +8,7 @@ namespace IsoBuilder.UI
     {
         [SerializeField] private GameObject loadingScreen;
         [SerializeField] private UIItemCatalog uiItemCatalog;
+        [SerializeField] private UIPlacementPanel uiPlacementPanel;
 
         public void SetActiveLoadingScreen(bool isActive)
         {
@@ -24,12 +25,13 @@ namespace IsoBuilder.UI
 
         public void ShowPlacementPanel(UnityAction onConfirm, UnityAction onCancel, UnityAction onFlip)
         {
-            throw new System.NotImplementedException();
+            uiPlacementPanel.Initialize(onConfirm, onCancel, onFlip);
+            uiPlacementPanel.gameObject.SetActive(true);
         }
 
         public void HidePlacementPanel()
         {
-            throw new System.NotImplementedException();
+            uiPlacementPanel.gameObject.SetActive(false);
         }
     }
 }

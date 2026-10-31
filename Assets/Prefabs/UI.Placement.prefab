@@ -172,8 +172,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: IsoBuilder.UI::IsoBuilder.Gameplay.UIPlacementPanel
   cancelButton: {fileID: 5445107887871847499}
-  confirmButton: {fileID: 4254524123748656989}
-  flipButton: {fileID: 8147324862519631105}
+  confirmButton: {fileID: 8147324862519631105}
+  flipButton: {fileID: 4254524123748656989}
 --- !u!1 &4630150618672271644
 GameObject:
   m_ObjectHideFlags: 0
@@ -329,7 +329,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: -150}
   m_SizeDelta: {x: 128, y: 128}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &7947595015378645427
