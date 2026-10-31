@@ -10,8 +10,8 @@ namespace IsoBuilder.Gameplay
         private readonly MapController mapController;
 
         private bool isDrag = false;
-        private Vector3 startPosition;
-        private Vector3 startPlacedPosition;
+        private Vector3 startPointerWorld;
+        private Vector3 startItemWorld;
 
         public ItemDragger(CameraController cameraController, PointerInput pointerInput, MapController mapController)
         {
@@ -24,8 +24,8 @@ namespace IsoBuilder.Gameplay
         {
             if (EventSystem.current.IsPointerOverGameObject(pointerInput.PointerId()))
                 return;
-            startPosition = cameraController.ScreenToWorldPosition(pointerInput.CurrentPosition());
-            startPlacedPosition = worldOriginCellPosition;
+            startPointerWorld = cameraController.ScreenToWorldPosition(pointerInput.CurrentPosition());
+            startItemWorld = worldOriginCellPosition;
             isDrag = true;
         }
 
@@ -36,8 +36,8 @@ namespace IsoBuilder.Gameplay
                 return false;
 
             Vector3 currentPosition = cameraController.ScreenToWorldPosition(pointerInput.CurrentPosition());
-            Vector3 diff = currentPosition - startPosition;
-            Vector3 newWorldPosition = startPlacedPosition + diff;
+            Vector3 diff = currentPosition - startPointerWorld;
+            Vector3 newWorldPosition = startItemWorld + diff;
             newCellOrigin = mapController.WorldToCell(newWorldPosition);
 
             return newCellOrigin != originCell;
