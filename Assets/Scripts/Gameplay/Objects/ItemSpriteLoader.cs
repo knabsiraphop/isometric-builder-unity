@@ -33,5 +33,14 @@ namespace IsoBuilder.Gameplay
             spriteCaches[itemData.Id] = sprite;
             return sprite;
         }
+
+        public Sprite GetCacheSprite(ItemData itemData)
+        {
+            if (spriteCaches.TryGetValue(itemData.Id, out Sprite cachedSprite))
+            {
+                return cachedSprite;
+            }
+            return null;
+        }
     }
 }

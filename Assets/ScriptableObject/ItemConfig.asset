@@ -14,54 +14,54 @@ MonoBehaviour:
   m_EditorClassIdentifier: IsoBuilder.Core::IsoBuilder.Core.ItemConfig
   itemDatas:
   - Id: 1
-    FootPrint: {x: 2, y: 1}
-    Type: 1
-    SpriteOffset: {x: -0.07, y: 0.51}
-  - Id: 2
     FootPrint: {x: 1, y: 3}
     Type: 1
     SpriteOffset: {x: -0.58, y: 0.76}
-  - Id: 3
+  - Id: 2
     FootPrint: {x: 1, y: 1}
     Type: 1
     SpriteOffset: {x: 0, y: 1.61}
-  - Id: 4
-    FootPrint: {x: 4, y: 2}
+  - Id: 3
+    FootPrint: {x: 2, y: 4}
     Type: 1
-    SpriteOffset: {x: 0.55, y: 1.34}
-  - Id: 5
+    SpriteOffset: {x: -0.55, y: 1.29}
+  - Id: 4
     FootPrint: {x: 5, y: 5}
     Type: 1
     SpriteOffset: {x: 0, y: 1.48}
-  - Id: 6
-    FootPrint: {x: 3, y: 2}
+  - Id: 5
+    FootPrint: {x: 2, y: 3}
     Type: 1
-    SpriteOffset: {x: 0.25, y: 1.23}
-  - Id: 7
+    SpriteOffset: {x: -0.36, y: 1.2}
+  - Id: 6
     FootPrint: {x: 2, y: 2}
     Type: 1
-    SpriteOffset: {x: 0.07, y: 1.82}
+    SpriteOffset: {x: 0, y: 1.83}
+  - Id: 7
+    FootPrint: {x: 5, y: 3}
+    Type: 1
+    SpriteOffset: {x: 0.4, y: 1.46}
   - Id: 8
-    FootPrint: {x: 3, y: 5}
+    FootPrint: {x: 4, y: 3}
     Type: 1
-    SpriteOffset: {x: -0.37, y: 1.45}
+    SpriteOffset: {x: 0.29, y: 1.45}
   - Id: 9
-    FootPrint: {x: 3, y: 4}
-    Type: 1
-    SpriteOffset: {x: -0.37, y: 1.45}
-  - Id: 10
     FootPrint: {x: 3, y: 3}
     Type: 1
-    SpriteOffset: {x: -0.09, y: 1.32}
+    SpriteOffset: {x: 0.09, y: 1.35}
+  - Id: 10
+    FootPrint: {x: 2, y: 3}
+    Type: 1
+    SpriteOffset: {x: -0.25, y: 1.66}
   - Id: 11
-    FootPrint: {x: 7, y: 5}
+    FootPrint: {x: 4, y: 7}
     Type: 2
-    SpriteOffset: {x: 1.06, y: 3.52}
+    SpriteOffset: {x: -1.09, y: 3.44}
   - Id: 12
-    FootPrint: {x: 5, y: 1}
+    FootPrint: {x: 1, y: 5}
     Type: 2
-    SpriteOffset: {x: 1.09, y: 1.81}
+    SpriteOffset: {x: -1.08, y: 1.8}
   - Id: 13
-    FootPrint: {x: 6, y: 5}
+    FootPrint: {x: 5, y: 6}
     Type: 2
-    SpriteOffset: {x: 0.45, y: 2.48}
+    SpriteOffset: {x: -0.36, y: 2.48}
