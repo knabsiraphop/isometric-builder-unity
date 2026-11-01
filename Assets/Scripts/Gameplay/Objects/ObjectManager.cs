@@ -15,7 +15,7 @@ namespace IsoBuilder.Gameplay
         private List<PlacedItem> placedItems;
         private List<int> stationPlacedItems;
 
-        private int currentOwnerId = 0;
+        private int currentInstanceId = 0;
 
         public void Initialize(MapController mapController)
         {
@@ -40,7 +40,7 @@ namespace IsoBuilder.Gameplay
             }
 
             placedItem = Instantiate(placedItemPrefab, transform);
-            placedItem.Initialize(itemData, sprite, GetNextOwnerId());
+            placedItem.Initialize(itemData, sprite, GetNextInstanceId());
 
             return true;
         }
@@ -49,7 +49,7 @@ namespace IsoBuilder.Gameplay
         {
             IReadOnlyList<Vector2Int> cells = placedItem.ItemData.GetCells(placedItem.OriginCell, placedItem.Flipped);
             foreach (Vector2Int cell in cells)
-                occupancyGrid.Occupy(cell, placedItem.OwnerId);
+                occupancyGrid.Occupy(cell, placedItem.InstanceId);
             placedItems.Add(placedItem);
             if (placedItem.ItemData.Type == ItemType.Station)
             {
@@ -61,7 +61,7 @@ namespace IsoBuilder.Gameplay
         {
             IReadOnlyList<Vector2Int> cells = placedItem.ItemData.GetCells(placedItem.OriginCell, placedItem.Flipped);
             foreach (Vector2Int cell in cells)
-                occupancyGrid.Release(cell, placedItem.OwnerId);
+                occupancyGrid.Release(cell, placedItem.InstanceId);
             placedItems.Remove(placedItem);
             if (placedItem.ItemData.Type == ItemType.Station)
             {
@@ -73,23 +73,23 @@ namespace IsoBuilder.Gameplay
         {
             IReadOnlyList<Vector2Int> cells = placedItem.ItemData.GetCells(previousCellOrigin, previousFlipped);
             foreach (Vector2Int cell in cells)
-                occupancyGrid.Release(cell, placedItem.OwnerId);
+                occupancyGrid.Release(cell, placedItem.InstanceId);
             cells = placedItem.ItemData.GetCells(placedItem.OriginCell, placedItem.Flipped);
             foreach (Vector2Int cell in cells)
-                occupancyGrid.Occupy(cell, placedItem.OwnerId);
+                occupancyGrid.Occupy(cell, placedItem.InstanceId);
         }
 
         public bool IsItemConfirm(PlacedItem placedItem) => placedItems.Contains(placedItem);
 
         public bool CanPlaceItem(PlacedItem placedItem, Vector2Int origin, bool flipped)
         {
-            return placementRules.CanPlaceItem(origin, placedItem.ItemData, flipped, placedItem.OwnerId);
+            return placementRules.CanPlaceItem(origin, placedItem.ItemData, flipped, placedItem.InstanceId);
         }
 
-        private int GetNextOwnerId()
+        private int GetNextInstanceId()
         {
-            currentOwnerId++;
-            return currentOwnerId;
+            currentInstanceId++;
+            return currentInstanceId;
         }
     }
 }

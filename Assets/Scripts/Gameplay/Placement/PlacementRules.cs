@@ -15,7 +15,7 @@ namespace IsoBuilder.Gameplay
             this.occupancyGrid = occupancyGrid;
         }
 
-        public bool CanPlaceItem(Vector2Int originCell, ItemData itemData, bool flipped, int ownerId)
+        public bool CanPlaceItem(Vector2Int originCell, ItemData itemData, bool flipped, int instanceId)
         {
             if (itemData.Type == ItemType.None)
             {
@@ -30,7 +30,7 @@ namespace IsoBuilder.Gameplay
                     return false;
                 }
 
-                if (!CanFitInZone(itemData.Type, zoneType) || !occupancyGrid.IsFree(cell, ownerId))
+                if (!CanFitInZone(itemData.Type, zoneType) || !occupancyGrid.IsFree(cell, instanceId))
                 {
                     return false;
                 }
