@@ -12,6 +12,13 @@ namespace IsoBuilder.UI
         [SerializeField] private UIItemCatalog uiItemCatalog;
         [SerializeField] private UIPlacementPanel uiPlacementPanel;
 
+        private UIStationController stationController;
+
+        private void Awake()
+        {
+            stationController = new UIStationController(transform);
+        }
+
         public void SetActiveLoadingScreen(bool isActive)
         {
             if (loadingScreen != null)

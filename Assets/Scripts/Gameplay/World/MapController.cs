@@ -1,5 +1,6 @@
 using Cysharp.Threading.Tasks;
 using IsoBuilder.Core;
+using IsoBuilder.Utils;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
@@ -77,17 +78,13 @@ namespace IsoBuilder.Gameplay
 
             foreach (int id in ids)
             {
-                ResourceRequest resourceRequest = Resources.LoadAsync<TileBase>($"Tile/Tile_{id}");
-                await resourceRequest.ToUniTask();
-                if (resourceRequest.asset == null)
+                TileBase result = await ResourceLoader.LoadResourceAsync<TileBase>($"Tile/Tile_{id}");
+
+                if (result == null)
                 {
-                    Debug.LogError($"Tile with id {id} not found in Resources/Tile/Tile_{id}");
+                    return;
                 }
-                else
-                {
-                    TileBase result = (TileBase)resourceRequest.asset;
-                    tileBases[id] = result;
-                }
+                tileBases[id] = result;
             }
         }
 

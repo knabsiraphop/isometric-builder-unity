@@ -1,5 +1,6 @@
 using Cysharp.Threading.Tasks;
 using IsoBuilder.Core;
+using IsoBuilder.Utils;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -22,15 +23,8 @@ namespace IsoBuilder.Gameplay
             }
 
             string resourcePath = $"Item/{itemData.Type}/{itemData.Id}";
-            ResourceRequest resourceRequest = Resources.LoadAsync<Sprite>(resourcePath);
-            await resourceRequest.ToUniTask();
-            if(resourceRequest.asset == null)
-            {
-                Debug.LogError($"Sprite not found at path: {resourcePath}");
-                return null;
-            }
-            Sprite sprite = (Sprite)resourceRequest.asset;
-            spriteCaches[itemData.Id] = sprite;
+
+            Sprite sprite = await ResourceLoader.LoadResourceAsync<Sprite>(resourcePath);
             return sprite;
         }
 
