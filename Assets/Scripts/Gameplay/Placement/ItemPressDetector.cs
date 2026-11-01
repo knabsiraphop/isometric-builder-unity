@@ -35,7 +35,7 @@ namespace IsoBuilder.Gameplay
         {
             if (lastPressedItem != null)
             {
-                Debug.LogWarning($"Item {placedItem.OwnerId} pressed while already pressed {lastPressedItem.OwnerId}");
+                Debug.LogWarning($"Item {placedItem.InstanceId} pressed while already pressed {lastPressedItem.InstanceId}");
             }
             lastPressedItem = placedItem;
         }

@@ -13,19 +13,19 @@ namespace IsoBuilder.Gameplay
         [SerializeField] private PlacedItemPointer placedItemPointer;
 
         public ItemData ItemData { get; private set; }
-        public int OwnerId { get; private set; }
+        public int InstanceId { get; private set; }
 
-        public Vector2Int OriginCell { get; private set; }
+        public Vector2Int CellOrigin { get; private set; }
         public bool Flipped { get; private set; } = false;
         public Vector3 WorldCellPosition { get; private set; }
         public Vector2Int CellMin { get; private set; }
         public Vector2Int CellMax { get; private set; }
         public Rect WorldRect { get; private set; }
 
-        public void Initialize(ItemData itemData, Sprite sprite, int ownerId)
+        public void Initialize(ItemData itemData, Sprite sprite, int instanceId)
         {
             ItemData = itemData;
-            OwnerId = ownerId;
+            InstanceId = instanceId;
 
             spriteRenderer.sprite = sprite;
 
@@ -41,7 +41,7 @@ namespace IsoBuilder.Gameplay
 
         public void SetPlacement(Vector2Int originCell, bool flipped, Vector3 worldCellPosition)
         {
-            OriginCell = originCell;
+            CellOrigin = originCell;
             Flipped = flipped;
             WorldCellPosition = worldCellPosition;
 

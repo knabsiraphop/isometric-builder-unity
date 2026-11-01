@@ -12,30 +12,30 @@ namespace IsoBuilder.Gameplay
             occupiedCells = new Dictionary<Vector2Int, int>();
         }
 
-        public bool IsFree(Vector2Int cell, int ownerId)
+        public bool IsFree(Vector2Int cell, int instanceId)
         {
             if (!occupiedCells.TryGetValue(cell, out int storedValue))
             {
                 return true;
             }
-            return storedValue == ownerId;
+            return storedValue == instanceId;
         }
 
-        public void Occupy(Vector2Int cell, int ownerId)
+        public void Occupy(Vector2Int cell, int instanceId)
         {
-            if (!IsFree(cell, ownerId))
+            if (!IsFree(cell, instanceId))
             {
-                Debug.LogError($"Attempted to occupy cell {cell} with ownerId {ownerId}, but it is already occupied by {occupiedCells[cell]}.");
+                Debug.LogError($"Attempted to occupy cell {cell} with instanceId {instanceId}, but it is already occupied by {occupiedCells[cell]}.");
                 return;
             }
-            occupiedCells[cell] = ownerId;
+            occupiedCells[cell] = instanceId;
         }
 
-        public void Release(Vector2Int cell, int ownerId)
+        public void Release(Vector2Int cell, int instanceId)
         {
-            if (!occupiedCells.TryGetValue(cell, out int storedValue) || storedValue != ownerId)
+            if (!occupiedCells.TryGetValue(cell, out int storedValue) || storedValue != instanceId)
             {
-                Debug.LogError($"Attempted to release cell {cell} with ownerId {ownerId},but it is free or occupied by {storedValue}.");
+                Debug.LogError($"Attempted to release cell {cell} with instanceId {instanceId},but it is free or occupied by {storedValue}.");
                 return;
             }
             occupiedCells.Remove(cell);
