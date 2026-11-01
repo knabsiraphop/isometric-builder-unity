@@ -44,7 +44,7 @@ namespace IsoBuilder.Gameplay
 
             pointerInput = new PointerInput();
             itemDragger = new(cameraController, pointerInput, mapController);
-            itemPressDetector = new(pointerInput, SelectItem);
+            itemPressDetector = new(pointerInput, SelectItem, TapItem);
         }
 
         public async UniTask ApplySave()
@@ -117,6 +117,14 @@ namespace IsoBuilder.Gameplay
                 currentSelectedItemData.flipped = placedItem.Flipped;
                 currentSelectedItemData.worldPosition = placedItem.WorldCellPosition;
             }
+        }
+
+        private void TapItem(PlacedItem placedItem) 
+        {
+            if (currentPlacementItem != null)
+                return;
+            if (placedItem.ItemData.Type != ItemType.Station)
+                return;
         }
 
         private void ConfirmPlacement()
