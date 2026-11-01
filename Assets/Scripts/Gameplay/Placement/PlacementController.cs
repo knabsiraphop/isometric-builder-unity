@@ -1,6 +1,5 @@
 using Cysharp.Threading.Tasks;
 using IsoBuilder.Core;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace IsoBuilder.Gameplay
@@ -109,6 +108,7 @@ namespace IsoBuilder.Gameplay
             }
             SetHighlight(placedItem);
             currentPlacementItem = placedItem;
+            uiManager.HideItemCatalog();
             uiManager.ShowPlacementPanel(ConfirmPlacement, CancelPlacement, FlipPlacement);
             if (objectManager.IsItemConfirm(placedItem))
             {
@@ -119,12 +119,16 @@ namespace IsoBuilder.Gameplay
             }
         }
 
-        private void TapItem(PlacedItem placedItem) 
+        private void TapItem(PlacedItem placedItem)
         {
             if (currentPlacementItem != null)
                 return;
             if (placedItem.ItemData.Type != ItemType.Station)
                 return;
+            if (itemCatalog.TryGetStationType(placedItem.ItemData.Id, out StationType stationType))
+            {
+                uiManager.ShowStationPanel(stationType);
+            }
         }
 
         private void ConfirmPlacement()
@@ -174,6 +178,7 @@ namespace IsoBuilder.Gameplay
 
             currentPlacementItem = null;
             cellHighlighter.ClearAllHighlights();
+            uiManager.ShowItemCatalog();
             uiManager.HidePlacementPanel();
             itemDragger.Reset();
         }

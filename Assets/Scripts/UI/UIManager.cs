@@ -11,12 +11,13 @@ namespace IsoBuilder.UI
         [SerializeField] private GameObject loadingScreen;
         [SerializeField] private UIItemCatalog uiItemCatalog;
         [SerializeField] private UIPlacementPanel uiPlacementPanel;
+        [SerializeField] private Transform panelContainer;
 
         private UIStationController stationController;
 
         private void Awake()
         {
-            stationController = new UIStationController(transform);
+            stationController = new UIStationController(panelContainer);
         }
 
         public void SetActiveLoadingScreen(bool isActive)
@@ -36,6 +37,7 @@ namespace IsoBuilder.UI
                 Sprite itemSprite = await itemSpriteLoader.GetSprite(item);
                 AddItemsToList(itemSprite, () => onItemSelect(item));
             }
+            ShowItemCatalog();
         }
 
         public void AddItemsToList(Sprite itemSprite, UnityAction onClickAction)
@@ -52,6 +54,21 @@ namespace IsoBuilder.UI
         public void HidePlacementPanel()
         {
             uiPlacementPanel.gameObject.SetActive(false);
+        }
+
+        public void ShowStationPanel(StationType stationType)
+        {
+            stationController.OpenStationUI(stationType).Forget();
+        }
+
+        public void ShowItemCatalog()
+        {
+            uiItemCatalog.gameObject.SetActive(true);
+        }
+
+        public void HideItemCatalog()
+        {
+            uiItemCatalog.gameObject.SetActive(false);
         }
     }
 }
