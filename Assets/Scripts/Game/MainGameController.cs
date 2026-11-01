@@ -23,7 +23,7 @@ namespace IsoBuilder
         private async UniTaskVoid Start()
         {
             itemCatalog = new ItemCatalog();
-            itemCatalog.Initialize(gameConfig.ItemConfig);
+            itemCatalog.Initialize(gameConfig.ItemConfig, gameConfig.StationConfig);
             itemSpriteLoader = new ItemSpriteLoader();
 
             loadSavePlacement = new LoadSavePlacement();
