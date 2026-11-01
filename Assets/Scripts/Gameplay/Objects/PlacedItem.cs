@@ -15,7 +15,7 @@ namespace IsoBuilder.Gameplay
         public ItemData ItemData { get; private set; }
         public int InstanceId { get; private set; }
 
-        public Vector2Int OriginCell { get; private set; }
+        public Vector2Int CellOrigin { get; private set; }
         public bool Flipped { get; private set; } = false;
         public Vector3 WorldCellPosition { get; private set; }
         public Vector2Int CellMin { get; private set; }
@@ -41,7 +41,7 @@ namespace IsoBuilder.Gameplay
 
         public void SetPlacement(Vector2Int originCell, bool flipped, Vector3 worldCellPosition)
         {
-            OriginCell = originCell;
+            CellOrigin = originCell;
             Flipped = flipped;
             WorldCellPosition = worldCellPosition;
 

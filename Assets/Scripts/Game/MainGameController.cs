@@ -18,23 +18,28 @@ namespace IsoBuilder
         private ItemCatalog itemCatalog;
         private ItemSpriteLoader itemSpriteLoader;
 
+        private LoadSavePlacement loadSavePlacement;
+
         private async UniTaskVoid Start()
         {
             itemCatalog = new ItemCatalog();
             itemCatalog.Initialize(gameConfig.ItemConfig);
             itemSpriteLoader = new ItemSpriteLoader();
 
+            loadSavePlacement = new LoadSavePlacement();
 
             await mapController.Initialize(gameConfig.GridSystemConfig);
 
             cameraController.Initialize();
             cameraController.FitToBounds(mapController.GetMapBounds());
 
-            objectManager.Initialize(mapController);
+            objectManager.Initialize(mapController, loadSavePlacement);
 
-            placementController.Initialize(uiManager, itemCatalog, itemSpriteLoader, mapController, objectManager, cameraController);
-            await placementController.ShowItemCatalogs();
-            
+            placementController.Initialize(uiManager, itemCatalog, itemSpriteLoader, mapController, objectManager, cameraController, loadSavePlacement);
+            await placementController.ApplySave();
+
+            await uiManager.ShowItemCatalogs(itemCatalog, itemSpriteLoader, (data) => placementController.PlaceItem(data).Forget());
+
             uiManager.SetActiveLoadingScreen(false);
         }
     }

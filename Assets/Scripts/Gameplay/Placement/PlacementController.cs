@@ -26,12 +26,13 @@ namespace IsoBuilder.Gameplay
         private PointerInput pointerInput;
         private ItemDragger itemDragger;
         private ItemPressDetector itemPressDetector;
+        private LoadSavePlacement loadSavePlacement;
 
         private PlacedItem currentPlacementItem;
         private CurrentSelectedItemData currentSelectedItemData;
 
         public void Initialize(IUIManager uiManager, ItemCatalog itemCatalog, ItemSpriteLoader itemSpriteLoader,
-            MapController mapController, ObjectManager objectManager, CameraController cameraController)
+            MapController mapController, ObjectManager objectManager, CameraController cameraController, LoadSavePlacement loadSavePlacement)
         {
             this.uiManager = uiManager;
             this.itemCatalog = itemCatalog;
@@ -39,29 +40,52 @@ namespace IsoBuilder.Gameplay
             this.mapController = mapController;
             this.objectManager = objectManager;
             this.cameraController = cameraController;
+            this.loadSavePlacement = loadSavePlacement;
 
             pointerInput = new PointerInput();
             itemDragger = new(cameraController, pointerInput, mapController);
             itemPressDetector = new(pointerInput, SelectItem);
         }
 
-        public async UniTask ShowItemCatalogs()
+        public async UniTask ApplySave()
         {
-            IEnumerable<ItemData> items = itemCatalog.GetItems();
-
-            foreach (ItemData item in items)
-            {
-                Sprite itemSprite = await itemSpriteLoader.GetSprite(item);
-                uiManager.AddItemsToList(itemSprite, () => PlaceItem(item));
-            }
+            await loadSavePlacement.ApplySave(PlaceItemFromData);
         }
 
-        private void PlaceItem(ItemData item)
+        public async UniTask PlaceItemFromData(PlacedItemData placedObjectData)
         {
-            Sprite itemSprite = itemSpriteLoader.GetCacheSprite(item);
-            if (itemSprite == null)
+            objectManager.SetCurrentInstanceId(placedObjectData.InstanceId);
+            if (!itemCatalog.TryGetItemData(placedObjectData.ItemId, out ItemData itemData))
             {
-                Debug.LogError($"Sprite not found for item: {item.Id}");
+                Debug.LogError($"Item data not found : {placedObjectData.ItemId}");
+                return;
+            }
+            Sprite itemSprite = await itemSpriteLoader.GetSprite(itemData);
+            if (!itemSprite)
+            {
+                return;
+            }
+            if (!objectManager.CanPlaceItem(itemData, placedObjectData.CellOrigin, placedObjectData.Flipped, placedObjectData.InstanceId))
+            {
+                Debug.LogError("Can't Place Saved Item");
+                return;
+            }
+            if (!objectManager.TryCreatePlacedItem(itemData, itemSprite, out PlacedItem placedItem, placedObjectData.InstanceId))
+            {
+                return;
+            }
+            SetItemPlacement(placedObjectData.CellOrigin, placedItem, placedObjectData.Flipped);
+
+            objectManager.OnConfirmPlacedItem(placedItem);
+            placedItem.InitializePointer(itemPressDetector.OnItemPressed);
+            return;
+        }
+
+        public async UniTask PlaceItem(ItemData item)
+        {
+            Sprite itemSprite = await itemSpriteLoader.GetSprite(item);
+            if (!itemSprite)
+            {
                 return;
             }
             if (objectManager.TryCreatePlacedItem(item, itemSprite, out PlacedItem placedItem))
@@ -69,7 +93,7 @@ namespace IsoBuilder.Gameplay
                 Vector2 screenCenter = cameraController.GetScreenCenter();
                 Vector2 worldPosition = cameraController.ScreenToWorldPosition(screenCenter);
                 Vector2Int cellOrigin = mapController.WorldToCell(worldPosition);
-                SetItemPlacement(cellOrigin, placedItem);
+                SetItemPlacement(cellOrigin, placedItem, false);
                 SelectItem(placedItem);
             }
         }
@@ -89,7 +113,7 @@ namespace IsoBuilder.Gameplay
             if (objectManager.IsItemConfirm(placedItem))
             {
                 currentSelectedItemData.hasSnapShot = true;
-                currentSelectedItemData.cellOrigin = placedItem.OriginCell;
+                currentSelectedItemData.cellOrigin = placedItem.CellOrigin;
                 currentSelectedItemData.flipped = placedItem.Flipped;
                 currentSelectedItemData.worldPosition = placedItem.WorldCellPosition;
             }
@@ -97,7 +121,7 @@ namespace IsoBuilder.Gameplay
 
         private void ConfirmPlacement()
         {
-            if (!objectManager.CanPlaceItem(currentPlacementItem, currentPlacementItem.OriginCell, currentPlacementItem.Flipped))
+            if (!objectManager.CanPlaceItem(currentPlacementItem, currentPlacementItem.CellOrigin, currentPlacementItem.Flipped))
             {
                 Debug.LogError("Can't Place Item");
                 return;
@@ -118,7 +142,7 @@ namespace IsoBuilder.Gameplay
 
         private void FlipPlacement()
         {
-            currentPlacementItem.SetPlacement(currentPlacementItem.OriginCell, !currentPlacementItem.Flipped, currentPlacementItem.WorldCellPosition);
+            currentPlacementItem.SetPlacement(currentPlacementItem.CellOrigin, !currentPlacementItem.Flipped, currentPlacementItem.WorldCellPosition);
             SetHighlight(currentPlacementItem);
         }
 
@@ -160,7 +184,7 @@ namespace IsoBuilder.Gameplay
             {
                 if (itemDragger.TryGetNewCellOrigin(currentPlacementItem, out Vector2Int newCellOrigin))
                 {
-                    SetItemPlacement(newCellOrigin, currentPlacementItem);
+                    SetItemPlacement(newCellOrigin, currentPlacementItem, currentPlacementItem.Flipped);
                     SetHighlight(currentPlacementItem);
                 }
                 itemPressDetector.OnPressed();
@@ -173,17 +197,17 @@ namespace IsoBuilder.Gameplay
             }
         }
 
-        private void SetItemPlacement(Vector2Int cellOrigin, PlacedItem placedItem)
+        private void SetItemPlacement(Vector2Int cellOrigin, PlacedItem placedItem, bool flipped)
         {
             Vector3 worldCellPosition = mapController.CellToWorld(cellOrigin);
-            placedItem.SetPlacement(cellOrigin, placedItem.Flipped, worldCellPosition);
+            placedItem.SetPlacement(cellOrigin, flipped, worldCellPosition);
         }
 
         private void SetHighlight(PlacedItem placedItem)
         {
             cellHighlighter.ClearAllHighlights();
-            bool canPlace = objectManager.CanPlaceItem(placedItem, placedItem.OriginCell, placedItem.Flipped);
-            cellHighlighter.HighlightCells(placedItem.ItemData.GetCells(placedItem.OriginCell, placedItem.Flipped), canPlace);
+            bool canPlace = objectManager.CanPlaceItem(placedItem, placedItem.CellOrigin, placedItem.Flipped);
+            cellHighlighter.HighlightCells(placedItem.ItemData.GetCells(placedItem.CellOrigin, placedItem.Flipped), canPlace);
         }
     }
 }

@@ -1,4 +1,6 @@
+using Cysharp.Threading.Tasks;
 using IsoBuilder.Core;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -15,6 +17,17 @@ namespace IsoBuilder.UI
             if (loadingScreen != null)
             {
                 loadingScreen.SetActive(isActive);
+            }
+        }
+
+        public async UniTask ShowItemCatalogs(ItemCatalog itemCatalog, IItemSpriteLoader itemSpriteLoader, UnityAction<ItemData> onItemSelect)
+        {
+            IEnumerable<ItemData> items = itemCatalog.GetItems();
+
+            foreach (ItemData item in items)
+            {
+                Sprite itemSprite = await itemSpriteLoader.GetSprite(item);
+                AddItemsToList(itemSprite, () => onItemSelect(item));
             }
         }
 

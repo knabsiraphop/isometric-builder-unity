@@ -5,9 +5,9 @@ using UnityEngine;
 
 namespace IsoBuilder.Gameplay
 {
-    public class ItemSpriteLoader
+    public class ItemSpriteLoader : IItemSpriteLoader
     {
-        private Dictionary<int, Sprite> spriteCaches;
+        private readonly Dictionary<int, Sprite> spriteCaches;
 
         public ItemSpriteLoader()
         {
@@ -16,7 +16,7 @@ namespace IsoBuilder.Gameplay
 
         public async UniTask<Sprite> GetSprite(ItemData itemData) 
         {
-            if (spriteCaches.TryGetValue(itemData.Id, out Sprite cachedSprite))
+            if (TryGetCacheSprite(itemData, out Sprite cachedSprite))
             {
                 return cachedSprite;
             }
@@ -34,13 +34,16 @@ namespace IsoBuilder.Gameplay
             return sprite;
         }
 
-        public Sprite GetCacheSprite(ItemData itemData)
+        public bool TryGetCacheSprite(ItemData itemData, out Sprite sprite)
         {
             if (spriteCaches.TryGetValue(itemData.Id, out Sprite cachedSprite))
             {
-                return cachedSprite;
+                sprite = cachedSprite;
+                return true;
             }
-            return null;
+
+            sprite = null;
+            return false;
         }
     }
 }

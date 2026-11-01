@@ -42,7 +42,7 @@ namespace IsoBuilder.Gameplay
             Vector3 newWorldPosition = startItemWorld + diff;
             newCellOrigin = mapController.WorldToCell(newWorldPosition);
 
-            return newCellOrigin != placedItem.OriginCell;
+            return newCellOrigin != placedItem.CellOrigin;
         }
 
         public void OnReleasedThisFrame()
