@@ -16,7 +16,7 @@ namespace IsoBuilder
         [SerializeField] private ObjectManager objectManager;
 
         private PlaceableCatalog placeableCatalog;
-        private PlaceableSpriteLoader placeableSpriteLoader;
+        private SpriteLoader spriteLoader;
 
         private LoadSavePlacement loadSavePlacement;
         private SaveDataStore saveDataStore;
@@ -25,9 +25,9 @@ namespace IsoBuilder
         {
             placeableCatalog = new PlaceableCatalog();
             placeableCatalog.Initialize(gameConfig.PlaceableConfig, gameConfig.StationConfig);
-            placeableSpriteLoader = new PlaceableSpriteLoader();
+            spriteLoader = new SpriteLoader();
 
-            saveDataStore = new SaveDataStore();
+            saveDataStore = new SaveDataStore(gameConfig);
             saveDataStore.LoadData();
             loadSavePlacement = new LoadSavePlacement(saveDataStore);
 
@@ -40,10 +40,10 @@ namespace IsoBuilder
 
             objectManager.Initialize(mapController, loadSavePlacement);
 
-            placementController.Initialize(uiManager, placeableCatalog, placeableSpriteLoader, mapController, objectManager, cameraController);
+            placementController.Initialize(uiManager, placeableCatalog, spriteLoader, mapController, objectManager, cameraController);
             await loadSavePlacement.ApplySave(placementController.PlaceObjectFromData);
 
-            await uiManager.ShowPlaceableCatalogs(placeableCatalog, placeableSpriteLoader, (data) => placementController.PlaceObject(data).Forget());
+            await uiManager.ShowPlaceableCatalogs(placeableCatalog, spriteLoader, (data) => placementController.PlaceObject(data).Forget());
 
             uiManager.SetActiveLoadingScreen(false);
         }

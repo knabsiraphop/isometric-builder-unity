@@ -19,11 +19,15 @@ namespace IsoBuilder.Gameplay
 
         public async UniTask ApplySave(Func<PlacedObjectData, UniTask> placeObject)
         {
-            IEnumerable<PlacedObjectData> sortDatas = saveDataStore.SaveData.PlacedObjectDatas.OrderBy(data => data.InstanceId);
-            foreach (PlacedObjectData placedObjectData in sortDatas)
+            PlacedObjectData[] savePlacedObjectDatas = saveDataStore.SaveData.PlacedObjectDatas;
+            if(savePlacedObjectDatas != null)
             {
-                placedObjectDatas[placedObjectData.InstanceId] = placedObjectData;
-                await placeObject(placedObjectData);
+                IEnumerable<PlacedObjectData> sortDatas = savePlacedObjectDatas.OrderBy(data => data.InstanceId);
+                foreach (PlacedObjectData placedObjectData in sortDatas)
+                {
+                    placedObjectDatas[placedObjectData.InstanceId] = placedObjectData;
+                    await placeObject(placedObjectData);
+                }
             }
         }
 
@@ -69,7 +73,7 @@ namespace IsoBuilder.Gameplay
 
         private void Save()
         {
-            List<PlacedObjectData> datas = new List<PlacedObjectData>(placedObjectDatas.Values);
+            PlacedObjectData[] datas = placedObjectDatas.Values.ToArray();
             saveDataStore.SaveData.PlacedObjectDatas = datas;
             saveDataStore.Save();
         }

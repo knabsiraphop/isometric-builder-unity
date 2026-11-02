@@ -4,19 +4,22 @@ namespace IsoBuilder.Core
     {
         private readonly LocalSave<SaveData> localSave;
 
+        private GameConfig gameConfig;
+
         public SaveData SaveData { get; private set; }
 
-        public SaveDataStore()
+        public SaveDataStore(GameConfig gameConfig)
         {
+            this.gameConfig = gameConfig;
             localSave = new LocalSave<SaveData>();
         }
 
         public void LoadData()
         {
-            SaveData = localSave.Load();
-            if (SaveData == null)
+            if (!localSave.TryLoad(out SaveData saveData))
             {
-                SaveData = new SaveData();
+                saveData.ApplySaveData(gameConfig);
+                SaveData = saveData;
             }
         }
 

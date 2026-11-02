@@ -43,23 +43,27 @@ namespace IsoBuilder.Core
             }
         }
 
-        public T Load()
+        public bool TryLoad(out T data)
         {
+            data = default;
             if (!File.Exists(saveFilePath))
             {
                 Debug.Log("No save file found. Creating new data.");
-                return new T();
+                data = new T();
+                return false;
             }
 
             try
             {
                 string json = File.ReadAllText(saveFilePath);
-                return JsonUtility.FromJson<T>(json);
+                data = JsonUtility.FromJson<T>(json);
+                return true;
             }
             catch (Exception e)
             {
                 Debug.LogError($"Error loading data: {e.Message}");
-                return new T();
+                data = new T();
+                return false;
             }
         }
     }

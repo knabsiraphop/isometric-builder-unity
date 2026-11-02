@@ -1,9 +1,10 @@
-using UnityEngine;
+using System;
 
 namespace IsoBuilder.Core
 {
-    public class InventoryItemData
+    [Serializable]
+    public struct InventoryItemData
     {
-    
+        public int Id;
     }
 }

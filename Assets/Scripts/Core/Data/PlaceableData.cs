@@ -27,5 +27,15 @@ namespace IsoBuilder.Core
             }
             return result;
         }
+
+        public string GetResourcePath()
+        {
+            return $"Placeable/{Type}/{Id}";
+        }
+
+        public string GetSpriteKey() 
+        {
+            return $"{Type}_{Id}";
+        }
     }
 }

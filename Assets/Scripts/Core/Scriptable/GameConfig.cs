@@ -5,14 +5,12 @@ namespace IsoBuilder.Core
     [CreateAssetMenu(fileName = "GameConfig", menuName = "Scriptable Objects/GameConfig")]
     public class GameConfig : ScriptableObject
     {
-        [SerializeField] private GridSystemConfig gridSystemConfig;
-        [SerializeField] private PlaceableConfig placeableConfig;
-        [SerializeField] private QuizConfig quizConfig;
-        [SerializeField] private StationConfig stationConfig;
-
-        public GridSystemConfig GridSystemConfig => gridSystemConfig;
-        public PlaceableConfig PlaceableConfig => placeableConfig;
-        public QuizConfig QuizConfig => quizConfig;
-        public StationConfig StationConfig => stationConfig;
+        [field: SerializeField] public GridSystemConfig GridSystemConfig { get; private set; }
+        [field: SerializeField] public PlaceableConfig PlaceableConfig { get; private set; }
+        [field: SerializeField] public QuizConfig QuizConfig { get; private set; }
+        [field: SerializeField] public StationConfig StationConfig { get; private set; }
+        [field: SerializeField] public MixerConfig MixerConfig { get; private set; }
+        [field: SerializeField] public InventoryItemMasterData InventoryItemMasterData { get; private set; }
+        [field: SerializeField] public InventoryStartData InventoryStartData { get; private set; }
     }
 }
