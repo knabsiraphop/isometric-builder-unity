@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: StationConfig
   m_EditorClassIdentifier: IsoBuilder.Core::IsoBuilder.Core.StationConfig
   StationDatas:
-  - ItemId: 11
+  - Id: 11
     Type: 1
-  - ItemId: 12
+  - Id: 12
     Type: 2
-  - ItemId: 13
+  - Id: 13
     Type: 3

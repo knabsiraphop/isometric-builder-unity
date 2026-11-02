@@ -125,7 +125,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a4b9003b40d68154d9e1f2a748eef0d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: IsoBuilder.Gameplay::IsoBuilder.Gameplay.ObjectManager
-  placedItemPrefab: {fileID: 638839418032058676, guid: df233c88b55b53341ab90e1e2a55ab40, type: 3}
+  placedObjectPrefab: {fileID: 638839418032058676, guid: df233c88b55b53341ab90e1e2a55ab40, type: 3}
 --- !u!114 &6433639274800368112
 MonoBehaviour:
   m_ObjectHideFlags: 0

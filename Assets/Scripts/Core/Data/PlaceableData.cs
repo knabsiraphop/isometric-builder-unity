@@ -5,11 +5,11 @@ using UnityEngine;
 namespace IsoBuilder.Core
 {
     [Serializable]
-    public struct ItemData
+    public struct PlaceableData
     {
         public int Id;
         public Vector2Int FootPrint;
-        public ItemType Type;
+        public PlaceableType Type;
         public Vector2 SpriteOffset;
 
         public IReadOnlyList<Vector2Int> GetCells(Vector2Int originCell, bool flipped)

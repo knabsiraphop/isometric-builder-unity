@@ -15,17 +15,17 @@ namespace IsoBuilder
         [SerializeField] private PlacementController placementController;
         [SerializeField] private ObjectManager objectManager;
 
-        private ItemCatalog itemCatalog;
-        private ItemSpriteLoader itemSpriteLoader;
+        private PlaceableCatalog placeableCatalog;
+        private PlaceableSpriteLoader placeableSpriteLoader;
 
         private LoadSavePlacement loadSavePlacement;
         private SaveDataStore saveDataStore;
 
         private async UniTaskVoid Start()
         {
-            itemCatalog = new ItemCatalog();
-            itemCatalog.Initialize(gameConfig.ItemConfig, gameConfig.StationConfig);
-            itemSpriteLoader = new ItemSpriteLoader();
+            placeableCatalog = new PlaceableCatalog();
+            placeableCatalog.Initialize(gameConfig.PlaceableConfig, gameConfig.StationConfig);
+            placeableSpriteLoader = new PlaceableSpriteLoader();
 
             saveDataStore = new SaveDataStore();
             saveDataStore.LoadData();
@@ -40,10 +40,10 @@ namespace IsoBuilder
 
             objectManager.Initialize(mapController, loadSavePlacement);
 
-            placementController.Initialize(uiManager, itemCatalog, itemSpriteLoader, mapController, objectManager, cameraController);
-            await loadSavePlacement.ApplySave(placementController.PlaceItemFromData);
+            placementController.Initialize(uiManager, placeableCatalog, placeableSpriteLoader, mapController, objectManager, cameraController);
+            await loadSavePlacement.ApplySave(placementController.PlaceObjectFromData);
 
-            await uiManager.ShowItemCatalogs(itemCatalog, itemSpriteLoader, (data) => placementController.PlaceItem(data).Forget());
+            await uiManager.ShowPlaceableCatalogs(placeableCatalog, placeableSpriteLoader, (data) => placementController.PlaceObject(data).Forget());
 
             uiManager.SetActiveLoadingScreen(false);
         }

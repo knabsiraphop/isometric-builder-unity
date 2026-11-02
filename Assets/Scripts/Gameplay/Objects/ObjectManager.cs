@@ -6,15 +6,15 @@ namespace IsoBuilder.Gameplay
 {
     public class ObjectManager : MonoBehaviour
     {
-        [SerializeField] private PlacedItem placedItemPrefab;
-        [SerializeField] private Transform itemContainer;
+        [SerializeField] private PlacedObject placedObjectPrefab;
+        [SerializeField] private Transform container;
 
         private OccupancyGrid occupancyGrid;
         private PlacementRules placementRules;
         private LoadSavePlacement loadSavePlacement;
 
-        private List<PlacedItem> placedItems;
-        private List<int> stationPlacedItems;
+        private List<PlacedObject> placedObjects;
+        private List<int> stationPlacedObjects;
 
         private int currentInstanceId;
 
@@ -24,78 +24,78 @@ namespace IsoBuilder.Gameplay
             placementRules = new PlacementRules(mapController, occupancyGrid);
             this.loadSavePlacement = loadSavePlacement;
 
-            placedItems = new List<PlacedItem>();
-            stationPlacedItems = new List<int>();
+            placedObjects = new List<PlacedObject>();
+            stationPlacedObjects = new List<int>();
 
             currentInstanceId = 0;
         }
 
-        public bool TryCreatePlacedItem(ItemData itemData, Sprite sprite, out PlacedItem placedItem, int saveInstanceId = -1)
+        public bool TryCreatePlacedObject(PlaceableData placeableData, Sprite sprite, out PlacedObject placedObject, int saveInstanceId = -1)
         {
-            if (itemData.Type == ItemType.Station)
+            if (placeableData.Type == PlaceableType.Station)
             {
-                if (stationPlacedItems.Contains(itemData.Id))
+                if (stationPlacedObjects.Contains(placeableData.Id))
                 {
-                    placedItem = null;
-                    Debug.LogWarning($"Station item with ID {itemData.Id} has already been placed. Cannot place another one.");
+                    placedObject = null;
+                    Debug.LogWarning($"Station object with ID {placeableData.Id} has already been placed. Cannot place another one.");
                     return false;
                 }
             }
 
-            placedItem = Instantiate(placedItemPrefab, itemContainer);
+            placedObject = Instantiate(placedObjectPrefab, container);
             int instanceId = saveInstanceId == -1 ? GetNextInstanceId() : saveInstanceId;
-            placedItem.Initialize(itemData, sprite, instanceId);
+            placedObject.Initialize(placeableData, sprite, instanceId);
 
             return true;
         }
 
-        public void OnConfirmPlacedItem(PlacedItem placedItem)
+        public void OnConfirmPlacedObject(PlacedObject placedObject)
         {
-            IReadOnlyList<Vector2Int> cells = placedItem.ItemData.GetCells(placedItem.CellOrigin, placedItem.Flipped);
+            IReadOnlyList<Vector2Int> cells = placedObject.PlaceableData.GetCells(placedObject.CellOrigin, placedObject.Flipped);
             foreach (Vector2Int cell in cells)
-                occupancyGrid.Occupy(cell, placedItem.InstanceId);
-            placedItems.Add(placedItem);
-            if (placedItem.ItemData.Type == ItemType.Station)
+                occupancyGrid.Occupy(cell, placedObject.InstanceId);
+            placedObjects.Add(placedObject);
+            if (placedObject.PlaceableData.Type == PlaceableType.Station)
             {
-                stationPlacedItems.Add(placedItem.ItemData.Id);
+                stationPlacedObjects.Add(placedObject.PlaceableData.Id);
             }
-            loadSavePlacement.SaveAddOrUpdateState(placedItem);
+            loadSavePlacement.SaveAddOrUpdateState(placedObject);
         }
 
-        public void OnRemovePlacedItem(PlacedItem placedItem)
+        public void OnRemovePlacedObject(PlacedObject placedObject)
         {
-            IReadOnlyList<Vector2Int> cells = placedItem.ItemData.GetCells(placedItem.CellOrigin, placedItem.Flipped);
+            IReadOnlyList<Vector2Int> cells = placedObject.PlaceableData.GetCells(placedObject.CellOrigin, placedObject.Flipped);
             foreach (Vector2Int cell in cells)
-                occupancyGrid.Release(cell, placedItem.InstanceId);
-            placedItems.Remove(placedItem);
-            if (placedItem.ItemData.Type == ItemType.Station)
+                occupancyGrid.Release(cell, placedObject.InstanceId);
+            placedObjects.Remove(placedObject);
+            if (placedObject.PlaceableData.Type == PlaceableType.Station)
             {
-                stationPlacedItems.Remove(placedItem.ItemData.Id);
+                stationPlacedObjects.Remove(placedObject.PlaceableData.Id);
             }
-            loadSavePlacement.SaveRemoveState(placedItem.InstanceId);
+            loadSavePlacement.SaveRemoveState(placedObject.InstanceId);
         }
 
-        public void OnConfirmMovePlacedItem(PlacedItem placedItem, Vector2Int previousCellOrigin, bool previousFlipped)
+        public void OnConfirmMovePlacedObject(PlacedObject placedObject, Vector2Int previousCellOrigin, bool previousFlipped)
         {
-            IReadOnlyList<Vector2Int> cells = placedItem.ItemData.GetCells(previousCellOrigin, previousFlipped);
+            IReadOnlyList<Vector2Int> cells = placedObject.PlaceableData.GetCells(previousCellOrigin, previousFlipped);
             foreach (Vector2Int cell in cells)
-                occupancyGrid.Release(cell, placedItem.InstanceId);
-            cells = placedItem.ItemData.GetCells(placedItem.CellOrigin, placedItem.Flipped);
+                occupancyGrid.Release(cell, placedObject.InstanceId);
+            cells = placedObject.PlaceableData.GetCells(placedObject.CellOrigin, placedObject.Flipped);
             foreach (Vector2Int cell in cells)
-                occupancyGrid.Occupy(cell, placedItem.InstanceId);
-            loadSavePlacement.SaveAddOrUpdateState(placedItem);
+                occupancyGrid.Occupy(cell, placedObject.InstanceId);
+            loadSavePlacement.SaveAddOrUpdateState(placedObject);
         }
 
-        public bool IsItemConfirm(PlacedItem placedItem) => placedItems.Contains(placedItem);
+        public bool IsPlaceableObjectConfirm(PlacedObject placedObject) => placedObjects.Contains(placedObject);
 
-        public bool CanPlaceItem(PlacedItem placedItem, Vector2Int origin, bool flipped)
+        public bool CanPlaceObject(PlacedObject placedObject, Vector2Int origin, bool flipped)
         {
-            return placementRules.CanPlaceItem(origin, placedItem.ItemData, flipped, placedItem.InstanceId);
+            return placementRules.CanPlaceObject(origin, placedObject.PlaceableData, flipped, placedObject.InstanceId);
         }
 
-        public bool CanPlaceItem(ItemData itemData, Vector2Int origin, bool flipped, int instanceId)
+        public bool CanPlaceObject(PlaceableData PlaceableData, Vector2Int origin, bool flipped, int instanceId)
         {
-            return placementRules.CanPlaceItem(origin, itemData, flipped, instanceId);
+            return placementRules.CanPlaceObject(origin, PlaceableData, flipped, instanceId);
         }
 
         private int GetNextInstanceId()

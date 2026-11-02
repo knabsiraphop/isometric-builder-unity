@@ -1,6 +1,6 @@
 namespace IsoBuilder.Core
 {
-    public enum ItemType
+    public enum PlaceableType
     {
         None,
         Furniture,

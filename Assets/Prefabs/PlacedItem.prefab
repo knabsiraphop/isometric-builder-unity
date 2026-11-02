@@ -49,7 +49,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: IsoBuilder.Gameplay::IsoBuilder.Gameplay.PlacedItem
   spriteRenderer: {fileID: 8046487320771025150}
   boxCollider: {fileID: -1755476658305616864}
-  placedItemPointer: {fileID: 7222085146472154176}
+  placedObjectPointer: {fileID: 7222085146472154176}
 --- !u!212 &8046487320771025150
 SpriteRenderer:
   serializedVersion: 2

@@ -6,31 +6,31 @@ using UnityEngine;
 
 namespace IsoBuilder.Gameplay
 {
-    public class ItemSpriteLoader : IItemSpriteLoader
+    public class PlaceableSpriteLoader : IPlaceableSpriteLoader
     {
         private readonly Dictionary<int, Sprite> spriteCaches;
 
-        public ItemSpriteLoader()
+        public PlaceableSpriteLoader()
         {
             spriteCaches = new Dictionary<int, Sprite>();
         }
 
-        public async UniTask<Sprite> GetSprite(ItemData itemData) 
+        public async UniTask<Sprite> GetSprite(PlaceableData placeableData) 
         {
-            if (TryGetCacheSprite(itemData, out Sprite cachedSprite))
+            if (TryGetCacheSprite(placeableData, out Sprite cachedSprite))
             {
                 return cachedSprite;
             }
 
-            string resourcePath = $"Item/{itemData.Type}/{itemData.Id}";
+            string resourcePath = $"Placeable/{placeableData.Type}/{placeableData.Id}";
 
             Sprite sprite = await ResourceLoader.LoadResourceAsync<Sprite>(resourcePath);
             return sprite;
         }
 
-        public bool TryGetCacheSprite(ItemData itemData, out Sprite sprite)
+        public bool TryGetCacheSprite(PlaceableData placeableData, out Sprite sprite)
         {
-            if (spriteCaches.TryGetValue(itemData.Id, out Sprite cachedSprite))
+            if (spriteCaches.TryGetValue(placeableData.Id, out Sprite cachedSprite))
             {
                 sprite = cachedSprite;
                 return true;

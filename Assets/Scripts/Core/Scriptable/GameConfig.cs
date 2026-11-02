@@ -6,12 +6,12 @@ namespace IsoBuilder.Core
     public class GameConfig : ScriptableObject
     {
         [SerializeField] private GridSystemConfig gridSystemConfig;
-        [SerializeField] private ItemConfig itemConfig;
+        [SerializeField] private PlaceableConfig placeableConfig;
         [SerializeField] private QuizConfig quizConfig;
         [SerializeField] private StationConfig stationConfig;
 
         public GridSystemConfig GridSystemConfig => gridSystemConfig;
-        public ItemConfig ItemConfig => itemConfig;
+        public PlaceableConfig PlaceableConfig => placeableConfig;
         public QuizConfig QuizConfig => quizConfig;
         public StationConfig StationConfig => stationConfig;
     }

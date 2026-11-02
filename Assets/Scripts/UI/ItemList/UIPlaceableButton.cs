@@ -4,14 +4,14 @@ using UnityEngine.UI;
 
 namespace IsoBuilder.UI
 {
-    public class UIItemButton : MonoBehaviour
+    public class UIPlaceableButton : MonoBehaviour
     {
         [SerializeField] private Button button;
-        [SerializeField] private Image itemImage;
+        [SerializeField] private Image image;
 
-        public void SetItem(Sprite itemSprite, UnityAction onClickAction)
+        public void SetButton(Sprite sprite, UnityAction onClickAction)
         {
-            itemImage.sprite = itemSprite;
+            image.sprite = sprite;
 
             button.onClick.RemoveAllListeners();
             button.onClick.AddListener(onClickAction);

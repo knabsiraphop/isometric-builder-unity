@@ -6,7 +6,7 @@ namespace IsoBuilder.Gameplay
 {
     public class PlacementController : MonoBehaviour
     {
-        private struct CurrentSelectedItemData
+        private struct CurrentSelectedObjectData
         {
             public bool hasSnapShot;
             public Vector2Int cellOrigin;
@@ -17,108 +17,108 @@ namespace IsoBuilder.Gameplay
         [SerializeField] private CellHighlighter cellHighlighter;
 
         private IUIManager uiManager;
-        private ItemCatalog itemCatalog;
-        private ItemSpriteLoader itemSpriteLoader;
+        private PlaceableCatalog placeableCatalog;
+        private PlaceableSpriteLoader placeableSpriteLoader;
         private MapController mapController;
         private ObjectManager objectManager;
         private CameraController cameraController;
         private PointerInput pointerInput;
-        private ItemDragger itemDragger;
-        private ItemPressDetector itemPressDetector;
+        private PlaceableObjectDragger placeableObjectDragger;
+        private PlaceableObjectPressDetector placeableObjectPressDetector;
 
-        private PlacedItem currentPlacementItem;
-        private CurrentSelectedItemData currentSelectedItemData;
+        private PlacedObject currentPlacedObject;
+        private CurrentSelectedObjectData currentSelectedObjectData;
 
-        public void Initialize(IUIManager uiManager, ItemCatalog itemCatalog, ItemSpriteLoader itemSpriteLoader,
+        public void Initialize(IUIManager uiManager, PlaceableCatalog placeableCatalog, PlaceableSpriteLoader placeableSpriteLoader,
             MapController mapController, ObjectManager objectManager, CameraController cameraController)
         {
             this.uiManager = uiManager;
-            this.itemCatalog = itemCatalog;
-            this.itemSpriteLoader = itemSpriteLoader;
+            this.placeableCatalog = placeableCatalog;
+            this.placeableSpriteLoader = placeableSpriteLoader;
             this.mapController = mapController;
             this.objectManager = objectManager;
             this.cameraController = cameraController;
 
             pointerInput = new PointerInput();
-            itemDragger = new(cameraController, pointerInput, mapController);
-            itemPressDetector = new(pointerInput, SelectItem, TapItem);
+            placeableObjectDragger = new(cameraController, pointerInput, mapController);
+            placeableObjectPressDetector = new(pointerInput, SelectObject, TapObject);
         }
 
-        public async UniTask PlaceItemFromData(PlacedItemData placedObjectData)
+        public async UniTask PlaceObjectFromData(PlacedObjectData placedObjectData)
         {
             objectManager.SetCurrentInstanceId(placedObjectData.InstanceId);
-            if (!itemCatalog.TryGetItemData(placedObjectData.ItemId, out ItemData itemData))
+            if (!placeableCatalog.TryGetPlaceableData(placedObjectData.Id, out PlaceableData placeableData))
             {
-                Debug.LogError($"Item data not found : {placedObjectData.ItemId}");
+                Debug.LogError($"placeable data not found : {placedObjectData.Id}");
                 return;
             }
-            Sprite itemSprite = await itemSpriteLoader.GetSprite(itemData);
-            if (!itemSprite)
-            {
-                return;
-            }
-            if (!objectManager.CanPlaceItem(itemData, placedObjectData.CellOrigin, placedObjectData.Flipped, placedObjectData.InstanceId))
-            {
-                Debug.LogError("Can't Place Saved Item");
-                return;
-            }
-            if (!objectManager.TryCreatePlacedItem(itemData, itemSprite, out PlacedItem placedItem, placedObjectData.InstanceId))
+            Sprite placeableSprite = await placeableSpriteLoader.GetSprite(placeableData);
+            if (!placeableSprite)
             {
                 return;
             }
-            SetItemPlacement(placedObjectData.CellOrigin, placedItem, placedObjectData.Flipped);
+            if (!objectManager.CanPlaceObject(placeableData, placedObjectData.CellOrigin, placedObjectData.Flipped, placedObjectData.InstanceId))
+            {
+                Debug.LogError("Can't Place Saved Placeable");
+                return;
+            }
+            if (!objectManager.TryCreatePlacedObject(placeableData, placeableSprite, out PlacedObject placedObject, placedObjectData.InstanceId))
+            {
+                return;
+            }
+            SetPlaceablePlacement(placedObjectData.CellOrigin, placedObject, placedObjectData.Flipped);
 
-            objectManager.OnConfirmPlacedItem(placedItem);
-            placedItem.InitializePointer(itemPressDetector.OnItemPressed);
+            objectManager.OnConfirmPlacedObject(placedObject);
+            placedObject.InitializePointer(placeableObjectPressDetector.OnObjectPressed);
             return;
         }
 
-        public async UniTask PlaceItem(ItemData item)
+        public async UniTask PlaceObject(PlaceableData placeableData)
         {
-            Sprite itemSprite = await itemSpriteLoader.GetSprite(item);
-            if (!itemSprite)
+            Sprite placeableSprite = await placeableSpriteLoader.GetSprite(placeableData);
+            if (!placeableSprite)
             {
                 return;
             }
-            if (objectManager.TryCreatePlacedItem(item, itemSprite, out PlacedItem placedItem))
+            if (objectManager.TryCreatePlacedObject(placeableData, placeableSprite, out PlacedObject placedObject))
             {
                 Vector2 screenCenter = cameraController.GetScreenCenter();
                 Vector2 worldPosition = cameraController.ScreenToWorldPosition(screenCenter);
                 Vector2Int cellOrigin = mapController.WorldToCell(worldPosition);
-                SetItemPlacement(cellOrigin, placedItem, false);
-                SelectItem(placedItem);
+                SetPlaceablePlacement(cellOrigin, placedObject, false);
+                SelectObject(placedObject);
             }
         }
 
-        private void SelectItem(PlacedItem placedItem)
+        private void SelectObject(PlacedObject placedObject)
         {
-            if (placedItem == currentPlacementItem)
+            if (placedObject == currentPlacedObject)
                 return;
 
-            if (currentPlacementItem != null)
+            if (currentPlacedObject != null)
             {
                 ClearCurrentPlacement();
             }
-            SetHighlight(placedItem);
-            currentPlacementItem = placedItem;
-            uiManager.HideItemCatalog();
+            SetHighlight(placedObject);
+            currentPlacedObject = placedObject;
+            uiManager.HidePlaceableCatalog();
             uiManager.ShowPlacementPanel(ConfirmPlacement, CancelPlacement, FlipPlacement);
-            if (objectManager.IsItemConfirm(placedItem))
+            if (objectManager.IsPlaceableObjectConfirm(placedObject))
             {
-                currentSelectedItemData.hasSnapShot = true;
-                currentSelectedItemData.cellOrigin = placedItem.CellOrigin;
-                currentSelectedItemData.flipped = placedItem.Flipped;
-                currentSelectedItemData.worldPosition = placedItem.WorldCellPosition;
+                currentSelectedObjectData.hasSnapShot = true;
+                currentSelectedObjectData.cellOrigin = placedObject.CellOrigin;
+                currentSelectedObjectData.flipped = placedObject.Flipped;
+                currentSelectedObjectData.worldPosition = placedObject.WorldCellPosition;
             }
         }
 
-        private void TapItem(PlacedItem placedItem)
+        private void TapObject(PlacedObject placedObject)
         {
-            if (currentPlacementItem != null)
+            if (currentPlacedObject != null)
                 return;
-            if (placedItem.ItemData.Type != ItemType.Station)
+            if (placedObject.PlaceableData.Type != PlaceableType.Station)
                 return;
-            if (itemCatalog.TryGetStationType(placedItem.ItemData.Id, out StationType stationType))
+            if (placeableCatalog.TryGetStationType(placedObject.PlaceableData.Id, out StationType stationType))
             {
                 uiManager.ShowStationPanel(stationType);
             }
@@ -126,17 +126,17 @@ namespace IsoBuilder.Gameplay
 
         private void ConfirmPlacement()
         {
-            if (!objectManager.CanPlaceItem(currentPlacementItem, currentPlacementItem.CellOrigin, currentPlacementItem.Flipped))
+            if (!objectManager.CanPlaceObject(currentPlacedObject, currentPlacedObject.CellOrigin, currentPlacedObject.Flipped))
             {
-                Debug.LogError("Can't Place Item");
+                Debug.LogError("Can't Place Saved Placeable");
                 return;
             }
-            if (objectManager.IsItemConfirm(currentPlacementItem))
-                objectManager.OnConfirmMovePlacedItem(currentPlacementItem, currentSelectedItemData.cellOrigin, currentSelectedItemData.flipped);
+            if (objectManager.IsPlaceableObjectConfirm(currentPlacedObject))
+                objectManager.OnConfirmMovePlacedObject(currentPlacedObject, currentSelectedObjectData.cellOrigin, currentSelectedObjectData.flipped);
             else
-                objectManager.OnConfirmPlacedItem(currentPlacementItem);
-            currentPlacementItem.InitializePointer(itemPressDetector.OnItemPressed);
-            currentSelectedItemData.hasSnapShot = false;
+                objectManager.OnConfirmPlacedObject(currentPlacedObject);
+            currentPlacedObject.InitializePointer(placeableObjectPressDetector.OnObjectPressed);
+            currentSelectedObjectData.hasSnapShot = false;
             ClearCurrentPlacement();
         }
 
@@ -147,33 +147,33 @@ namespace IsoBuilder.Gameplay
 
         private void FlipPlacement()
         {
-            currentPlacementItem.SetPlacement(currentPlacementItem.CellOrigin, !currentPlacementItem.Flipped, currentPlacementItem.WorldCellPosition);
-            SetHighlight(currentPlacementItem);
+            currentPlacedObject.SetPlacement(currentPlacedObject.CellOrigin, !currentPlacedObject.Flipped, currentPlacedObject.WorldCellPosition);
+            SetHighlight(currentPlacedObject);
         }
 
         private void ClearCurrentPlacement()
         {
-            if (currentPlacementItem == null)
+            if (currentPlacedObject == null)
                 return;
-            if (!objectManager.IsItemConfirm(currentPlacementItem))
+            if (!objectManager.IsPlaceableObjectConfirm(currentPlacedObject))
             {
-                Destroy(currentPlacementItem.gameObject);
+                Destroy(currentPlacedObject.gameObject);
             }
             else
             {
-                if (currentSelectedItemData.hasSnapShot)
+                if (currentSelectedObjectData.hasSnapShot)
                 {
-                    currentPlacementItem.SetPlacement(currentSelectedItemData.cellOrigin, currentSelectedItemData.flipped,
-                        currentSelectedItemData.worldPosition);
-                    currentSelectedItemData.hasSnapShot = false;
+                    currentPlacedObject.SetPlacement(currentSelectedObjectData.cellOrigin, currentSelectedObjectData.flipped,
+                        currentSelectedObjectData.worldPosition);
+                    currentSelectedObjectData.hasSnapShot = false;
                 }
             }
 
-            currentPlacementItem = null;
+            currentPlacedObject = null;
             cellHighlighter.ClearAllHighlights();
-            uiManager.ShowItemCatalog();
+            uiManager.ShowPlaceableCatalog();
             uiManager.HidePlacementPanel();
-            itemDragger.Reset();
+            placeableObjectDragger.Reset();
         }
 
         private void Update()
@@ -182,38 +182,38 @@ namespace IsoBuilder.Gameplay
                 return;
             if (pointerInput.WasPressedThisFrame())
             {
-                itemDragger.OnPressedThisFrame(currentPlacementItem);
-                itemPressDetector.OnPressedThisFrame();
+                placeableObjectDragger.OnPressedThisFrame(currentPlacedObject);
+                placeableObjectPressDetector.OnPressedThisFrame();
             }
 
             if (pointerInput.IsPressed())
             {
-                if (itemDragger.TryGetNewCellOrigin(currentPlacementItem, out Vector2Int newCellOrigin))
+                if (placeableObjectDragger.TryGetNewCellOrigin(currentPlacedObject, out Vector2Int newCellOrigin))
                 {
-                    SetItemPlacement(newCellOrigin, currentPlacementItem, currentPlacementItem.Flipped);
-                    SetHighlight(currentPlacementItem);
+                    SetPlaceablePlacement(newCellOrigin, currentPlacedObject, currentPlacedObject.Flipped);
+                    SetHighlight(currentPlacedObject);
                 }
-                itemPressDetector.OnPressed();
+                placeableObjectPressDetector.OnPressed();
             }
 
             if (pointerInput.WasReleasedThisFrame())
             {
-                itemDragger.OnReleasedThisFrame();
-                itemPressDetector.OnReleasedThisFrame();
+                placeableObjectDragger.OnReleasedThisFrame();
+                placeableObjectPressDetector.OnReleasedThisFrame();
             }
         }
 
-        private void SetItemPlacement(Vector2Int cellOrigin, PlacedItem placedItem, bool flipped)
+        private void SetPlaceablePlacement(Vector2Int cellOrigin, PlacedObject placedObject, bool flipped)
         {
             Vector3 worldCellPosition = mapController.CellToWorld(cellOrigin);
-            placedItem.SetPlacement(cellOrigin, flipped, worldCellPosition);
+            placedObject.SetPlacement(cellOrigin, flipped, worldCellPosition);
         }
 
-        private void SetHighlight(PlacedItem placedItem)
+        private void SetHighlight(PlacedObject placedObject)
         {
             cellHighlighter.ClearAllHighlights();
-            bool canPlace = objectManager.CanPlaceItem(placedItem, placedItem.CellOrigin, placedItem.Flipped);
-            cellHighlighter.HighlightCells(placedItem.ItemData.GetCells(placedItem.CellOrigin, placedItem.Flipped), canPlace);
+            bool canPlace = objectManager.CanPlaceObject(placedObject, placedObject.CellOrigin, placedObject.Flipped);
+            cellHighlighter.HighlightCells(placedObject.PlaceableData.GetCells(placedObject.CellOrigin, placedObject.Flipped), canPlace);
         }
     }
 }

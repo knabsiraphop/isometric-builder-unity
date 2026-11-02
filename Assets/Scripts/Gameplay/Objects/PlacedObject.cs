@@ -4,15 +4,15 @@ using UnityEngine;
 
 namespace IsoBuilder.Gameplay
 {
-    public class PlacedItem : MonoBehaviour
+    public class PlacedObject : MonoBehaviour
     {
         private const int MaxSortingOrder = 1000;
 
         [SerializeField] private SpriteRenderer spriteRenderer;
         [SerializeField] private BoxCollider2D boxCollider;
-        [SerializeField] private PlacedItemPointer placedItemPointer;
+        [SerializeField] private PlacedObjectPointer placedObjectPointer;
 
-        public ItemData ItemData { get; private set; }
+        public PlaceableData PlaceableData { get; private set; }
         public int InstanceId { get; private set; }
 
         public Vector2Int CellOrigin { get; private set; }
@@ -22,9 +22,9 @@ namespace IsoBuilder.Gameplay
         public Vector2Int CellMax { get; private set; }
         public Rect WorldRect { get; private set; }
 
-        public void Initialize(ItemData itemData, Sprite sprite, int instanceId)
+        public void Initialize(PlaceableData placeableData, Sprite sprite, int instanceId)
         {
-            ItemData = itemData;
+            PlaceableData = placeableData;
             InstanceId = instanceId;
 
             spriteRenderer.sprite = sprite;
@@ -34,9 +34,9 @@ namespace IsoBuilder.Gameplay
             boxCollider.size = new Vector2(spriteBound.size.x, spriteBound.size.y);
         }
 
-        public void InitializePointer(Action<PlacedItem> onItemPressed)
+        public void InitializePointer(Action<PlacedObject> onObjectPressed)
         {
-            placedItemPointer.Initialize(onItemPressed, this);
+            placedObjectPointer.Initialize(onObjectPressed, this);
         }
 
         public void SetPlacement(Vector2Int originCell, bool flipped, Vector3 worldCellPosition)
@@ -45,13 +45,13 @@ namespace IsoBuilder.Gameplay
             Flipped = flipped;
             WorldCellPosition = worldCellPosition;
 
-            Vector2 offset = flipped ? new Vector2(ItemData.SpriteOffset.x * -1f, ItemData.SpriteOffset.y) : ItemData.SpriteOffset;
+            Vector2 offset = flipped ? new Vector2(PlaceableData.SpriteOffset.x * -1f, PlaceableData.SpriteOffset.y) : PlaceableData.SpriteOffset;
             transform.position = worldCellPosition + (Vector3)offset;
             spriteRenderer.flipX = flipped;
 
             CellMin = originCell;
-            Vector2Int footprint = flipped ? new Vector2Int(ItemData.FootPrint.y - 1, ItemData.FootPrint.x - 1) :
-                new Vector2Int(ItemData.FootPrint.x - 1, ItemData.FootPrint.y - 1);
+            Vector2Int footprint = flipped ? new Vector2Int(PlaceableData.FootPrint.y - 1, PlaceableData.FootPrint.x - 1) :
+                new Vector2Int(PlaceableData.FootPrint.x - 1, PlaceableData.FootPrint.y - 1);
             CellMax = originCell + footprint;
 
             spriteRenderer.sortingOrder = MaxSortingOrder - (CellMin.x + CellMax.x + CellMin.y + CellMax.y);

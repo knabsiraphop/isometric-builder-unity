@@ -6,13 +6,15 @@ namespace IsoBuilder.Core
     [Serializable]
     public class SaveData
     {
-        public List<PlacedItemData> PlacedObjectDatas;
+        public List<PlacedObjectData> PlacedObjectDatas;
         public int QuizProgress;
+        public InventoryItemData[] InventoryItemDatas;
 
         public SaveData()
         {
-            PlacedObjectDatas = new List<PlacedItemData>();
+            PlacedObjectDatas = new List<PlacedObjectData>();
             QuizProgress = 0;
+            InventoryItemDatas = new InventoryItemData[0];
         }
     }
 }

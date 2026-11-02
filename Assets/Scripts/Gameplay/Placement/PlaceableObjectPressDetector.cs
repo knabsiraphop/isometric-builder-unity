@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace IsoBuilder.Gameplay
 {
-    public class ItemPressDetector
+    public class PlaceableObjectPressDetector
     {
         private const float HoldTime = 0.5f;
         private const float HoldCancelDistancePx = 10f;
@@ -12,16 +12,16 @@ namespace IsoBuilder.Gameplay
 
         private bool isPressed;
         private Vector2 pressedPoint;
-        private PlacedItem lastPressedItem;
+        private PlacedObject lastPressedObject;
         private float pressedTime;
-        private Action<PlacedItem> selectItem;
-        private Action<PlacedItem> tapItem;
+        private Action<PlacedObject> selectObject;
+        private Action<PlacedObject> tapObject;
 
-        public ItemPressDetector(PointerInput pointerInput, Action<PlacedItem> selectItem, Action<PlacedItem> tapItem)
+        public PlaceableObjectPressDetector(PointerInput pointerInput, Action<PlacedObject> selectObject, Action<PlacedObject> tapObject)
         {
             this.pointerInput = pointerInput;
-            this.selectItem = selectItem;
-            this.tapItem = tapItem;
+            this.selectObject = selectObject;
+            this.tapObject = tapObject;
         }
 
         public void OnPressedThisFrame()
@@ -33,18 +33,18 @@ namespace IsoBuilder.Gameplay
             isPressed = true;
         }
 
-        public void OnItemPressed(PlacedItem placedItem)
+        public void OnObjectPressed(PlacedObject placedObject)
         {
-            if (lastPressedItem != null)
+            if (lastPressedObject != null)
             {
-                Debug.LogWarning($"Item {placedItem.InstanceId} pressed while already pressed {lastPressedItem.InstanceId}");
+                Debug.LogWarning($"Object {placedObject.InstanceId} pressed while already pressed {lastPressedObject.InstanceId}");
             }
-            lastPressedItem = placedItem;
+            lastPressedObject = placedObject;
         }
 
         public void OnPressed()
         {
-            if (!isPressed || lastPressedItem == null)
+            if (!isPressed || lastPressedObject == null)
                 return;
             if (!IsWithinTapDistance())
             {
@@ -54,16 +54,16 @@ namespace IsoBuilder.Gameplay
             pressedTime += Time.deltaTime;
             if (pressedTime >= HoldTime)
             {
-                selectItem?.Invoke(lastPressedItem);
+                selectObject?.Invoke(lastPressedObject);
                 Reset();
             }
         }
 
         public void OnReleasedThisFrame()
         {
-            if (isPressed && lastPressedItem != null && IsWithinTapDistance())
+            if (isPressed && lastPressedObject != null && IsWithinTapDistance())
             {
-                tapItem?.Invoke(lastPressedItem);
+                tapObject?.Invoke(lastPressedObject);
             }
             Reset();
         }
@@ -78,7 +78,7 @@ namespace IsoBuilder.Gameplay
         public void Reset()
         {
             isPressed = false;
-            lastPressedItem = null;
+            lastPressedObject = null;
             pressedTime = 0;
         }
     }

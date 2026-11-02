@@ -603,6 +603,10 @@ PrefabInstance:
       propertyPath: uiPlacementPanel
       value: 
       objectReference: {fileID: 511940392698661626}
+    - target: {fileID: 2881234622690538163, guid: 48be3bca539a2d14b918d7a7f2c28331, type: 3}
+      propertyPath: uiPlaceableCatalog
+      value: 
+      objectReference: {fileID: 138620412}
     - target: {fileID: 6433639274800368112, guid: 48be3bca539a2d14b918d7a7f2c28331, type: 3}
       propertyPath: highlightTileMap
       value: 
@@ -648,7 +652,7 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8577697895417561515, guid: 48be3bca539a2d14b918d7a7f2c28331, type: 3}
-      propertyPath: itemContainer
+      propertyPath: container
       value: 
       objectReference: {fileID: 2051128765}
     m_RemovedComponents: []

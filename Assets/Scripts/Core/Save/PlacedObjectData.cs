@@ -4,10 +4,10 @@ using UnityEngine;
 namespace IsoBuilder.Core
 {
     [Serializable]
-    public class PlacedItemData
+    public class PlacedObjectData
     {
         public int InstanceId;
-        public int ItemId;
+        public int Id;
         public Vector2Int CellOrigin;
         public bool Flipped;
     }
