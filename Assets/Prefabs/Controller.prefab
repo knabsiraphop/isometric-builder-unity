@@ -56,6 +56,7 @@ MonoBehaviour:
   gameConfig: {fileID: 11400000, guid: 6875777028452e248aae92cedf6218cc, type: 2}
   placementController: {fileID: 309171556349217334}
   objectManager: {fileID: 8577697895417561515}
+  pooling: {fileID: 0}
 --- !u!114 &2881234622690538163
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -69,8 +70,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: ISOBuilder.UI::UIManager
   loadingScreen: {fileID: 0}
-  uiItemCatalog: {fileID: 0}
+  uiPlaceableCatalog: {fileID: 0}
   uiPlacementPanel: {fileID: 0}
+  panelContainer: {fileID: 0}
 --- !u!114 &1802342315110938309
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -125,7 +127,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a4b9003b40d68154d9e1f2a748eef0d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: IsoBuilder.Gameplay::IsoBuilder.Gameplay.ObjectManager
-  placedObjectPrefab: {fileID: 638839418032058676, guid: df233c88b55b53341ab90e1e2a55ab40, type: 3}
+  placedObjectPrefab: {fileID: 4456650923859053858, guid: df233c88b55b53341ab90e1e2a55ab40, type: 3}
+  container: {fileID: 0}
 --- !u!114 &6433639274800368112
 MonoBehaviour:
   m_ObjectHideFlags: 0

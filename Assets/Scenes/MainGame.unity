@@ -176,6 +176,50 @@ Tilemap:
   m_CorrespondingSourceObject: {fileID: 8505132009554016641, guid: 17b930fcb40bee744a0ef1593b3d24f7, type: 3}
   m_PrefabInstance: {fileID: 5187609173505304070}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1443092789
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1443092791}
+  - component: {fileID: 1443092790}
+  m_Layer: 0
+  m_Name: Pooling
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1443092790
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1443092789}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa2a4551aaafda243a3c326c98a98fbe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: IsoBuilder.Utils::IsoBuilder.Utils.Pooling
+--- !u!4 &1443092791
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1443092789}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1742422359
 GameObject:
   m_ObjectHideFlags: 0
@@ -352,21 +396,9 @@ PrefabInstance:
       propertyPath: m_Camera
       value: 
       objectReference: {fileID: 519420031}
-    - target: {fileID: 3461709805827542759, guid: 8dcb6bfd318a87f49b551507351ad302, type: 3}
-      propertyPath: m_AdditionalShaderChannelsFlag
-      value: 25
-      objectReference: {fileID: 0}
     - target: {fileID: 5955877116147814693, guid: 8dcb6bfd318a87f49b551507351ad302, type: 3}
       propertyPath: m_Name
       value: Canvas.UI
-      objectReference: {fileID: 0}
-    - target: {fileID: 6450892812576935243, guid: 8dcb6bfd318a87f49b551507351ad302, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7252469397228792571, guid: 8dcb6bfd318a87f49b551507351ad302, type: 3}
-      propertyPath: m_SizeDelta.y
-      value: 20
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -592,10 +624,6 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 301574167}
     - target: {fileID: 2881234622690538163, guid: 48be3bca539a2d14b918d7a7f2c28331, type: 3}
-      propertyPath: uiItemCatalog
-      value: 
-      objectReference: {fileID: 138620412}
-    - target: {fileID: 2881234622690538163, guid: 48be3bca539a2d14b918d7a7f2c28331, type: 3}
       propertyPath: panelContainer
       value: 
       objectReference: {fileID: 1041474197}
@@ -655,6 +683,10 @@ PrefabInstance:
       propertyPath: container
       value: 
       objectReference: {fileID: 2051128765}
+    - target: {fileID: 8595909128493165503, guid: 48be3bca539a2d14b918d7a7f2c28331, type: 3}
+      propertyPath: pooling
+      value: 
+      objectReference: {fileID: 1443092790}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -768,3 +800,4 @@ SceneRoots:
   - {fileID: 511940392698661625}
   - {fileID: 7864719884713743274}
   - {fileID: 1742422362}
+  - {fileID: 1443092791}

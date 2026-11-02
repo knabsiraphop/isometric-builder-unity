@@ -30,7 +30,7 @@ namespace IsoBuilder.Core
 
         public string GetResourcePath()
         {
-            return $"Placeable/{Type}/{Id}";
+            return $"Placeable/{Type}/{Type}_{Id}";
         }
 
         public string GetSpriteKey() 

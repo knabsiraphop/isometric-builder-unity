@@ -20,7 +20,6 @@ namespace IsoBuilder.Gameplay
         public Vector3 WorldCellPosition { get; private set; }
         public Vector2Int CellMin { get; private set; }
         public Vector2Int CellMax { get; private set; }
-        public Rect WorldRect { get; private set; }
 
         public void Initialize(PlaceableData placeableData, Sprite sprite, int instanceId)
         {
@@ -57,9 +56,18 @@ namespace IsoBuilder.Gameplay
             spriteRenderer.sortingOrder = MaxSortingOrder - (CellMin.x + CellMax.x + CellMin.y + CellMax.y);
         }
 
-        public void SetSortingOrder(int order)
+        public void Clear() 
         {
-            spriteRenderer.sortingOrder = order;
+            PlaceableData = default;
+            InstanceId = -1;
+            spriteRenderer.sprite = null;
+            boxCollider.offset = Vector2.zero;
+            boxCollider.size = Vector2.zero;
+            CellOrigin = Vector2Int.zero;
+            Flipped = false;
+            WorldCellPosition = Vector3.zero;
+            CellMin = Vector2Int.zero;
+            CellMax = Vector2Int.zero;
         }
     }
 }

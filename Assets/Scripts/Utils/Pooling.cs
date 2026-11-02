@@ -21,6 +21,11 @@ namespace IsoBuilder.Utils
             }
         }
 
+        public GameObject GetObject(GameObject prefab, Transform parent)
+        {
+            return GetObject(prefab, Vector3.zero, Quaternion.identity, parent);
+        }
+
         public GameObject GetObject(GameObject prefab, Vector3 position, Quaternion rotation, Transform parent)
         {
             if (!poolObjects.ContainsKey(prefab.name))

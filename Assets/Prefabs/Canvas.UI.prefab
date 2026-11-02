@@ -58,7 +58,7 @@ Canvas:
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
   m_VertexColorAlwaysGammaSpace: 0
-  m_AdditionalShaderChannelsFlag: 0
+  m_AdditionalShaderChannelsFlag: 25
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: -891439625
   m_SortingOrder: 0
@@ -219,11 +219,15 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 218143331292445758, guid: 0f977c0ec1fc9894cb90b8911cb19b7a, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 0
+      value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 4477948692656823182, guid: 0f977c0ec1fc9894cb90b8911cb19b7a, type: 3}
       propertyPath: m_Name
       value: UI.ItemCatalog
+      objectReference: {fileID: 0}
+    - target: {fileID: 4477948692656823182, guid: 0f977c0ec1fc9894cb90b8911cb19b7a, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6040635710459596511, guid: 0f977c0ec1fc9894cb90b8911cb19b7a, type: 3}
       propertyPath: m_Pivot.x

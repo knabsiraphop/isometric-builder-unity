@@ -1,4 +1,5 @@
 using IsoBuilder.Core;
+using IsoBuilder.Utils;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -6,23 +7,25 @@ namespace IsoBuilder.Gameplay
 {
     public class ObjectManager : MonoBehaviour
     {
-        [SerializeField] private PlacedObject placedObjectPrefab;
+        [SerializeField] private GameObject placedObjectPrefab;
         [SerializeField] private Transform container;
 
         private OccupancyGrid occupancyGrid;
         private PlacementRules placementRules;
         private LoadSavePlacement loadSavePlacement;
+        private Pooling pooling;
 
         private List<PlacedObject> placedObjects;
         private List<int> stationPlacedObjects;
 
         private int currentInstanceId;
 
-        public void Initialize(MapController mapController, LoadSavePlacement loadSavePlacement)
+        public void Initialize(MapController mapController, LoadSavePlacement loadSavePlacement, Pooling pooling)
         {
             occupancyGrid = new OccupancyGrid();
             placementRules = new PlacementRules(mapController, occupancyGrid);
             this.loadSavePlacement = loadSavePlacement;
+            this.pooling = pooling;
 
             placedObjects = new List<PlacedObject>();
             stationPlacedObjects = new List<int>();
@@ -42,7 +45,8 @@ namespace IsoBuilder.Gameplay
                 }
             }
 
-            placedObject = Instantiate(placedObjectPrefab, container);
+            GameObject obj = pooling.GetObject(placedObjectPrefab, container);
+            placedObject = obj.GetComponent<PlacedObject>();
             int instanceId = saveInstanceId == -1 ? GetNextInstanceId() : saveInstanceId;
             placedObject.Initialize(placeableData, sprite, instanceId);
 
@@ -96,6 +100,12 @@ namespace IsoBuilder.Gameplay
         public bool CanPlaceObject(PlaceableData PlaceableData, Vector2Int origin, bool flipped, int instanceId)
         {
             return placementRules.CanPlaceObject(origin, PlaceableData, flipped, instanceId);
+        }
+
+        public void ReturnPlacedObject(PlacedObject placedObject)
+        {
+            placedObject.Clear();
+            pooling.ReturnObject(placedObjectPrefab.name, placedObject.gameObject);
         }
 
         private int GetNextInstanceId()

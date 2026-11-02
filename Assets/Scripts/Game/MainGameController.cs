@@ -2,6 +2,7 @@ using Cysharp.Threading.Tasks;
 using IsoBuilder.Core;
 using IsoBuilder.Gameplay;
 using IsoBuilder.UI;
+using IsoBuilder.Utils;
 using UnityEngine;
 
 namespace IsoBuilder
@@ -14,6 +15,7 @@ namespace IsoBuilder
         [SerializeField] private GameConfig gameConfig;
         [SerializeField] private PlacementController placementController;
         [SerializeField] private ObjectManager objectManager;
+        [SerializeField] private Pooling pooling;
 
         private PlaceableCatalog placeableCatalog;
         private SpriteLoader spriteLoader;
@@ -38,7 +40,7 @@ namespace IsoBuilder
             cameraController.Initialize();
             cameraController.FitToBounds(mapController.GetMapBounds());
 
-            objectManager.Initialize(mapController, loadSavePlacement);
+            objectManager.Initialize(mapController, loadSavePlacement, pooling);
 
             placementController.Initialize(uiManager, placeableCatalog, spriteLoader, mapController, objectManager, cameraController);
             await loadSavePlacement.ApplySave(placementController.PlaceObjectFromData);

@@ -157,7 +157,7 @@ namespace IsoBuilder.Gameplay
                 return;
             if (!objectManager.IsPlaceableObjectConfirm(currentPlacedObject))
             {
-                Destroy(currentPlacedObject.gameObject);
+                objectManager.ReturnPlacedObject(currentPlacedObject);
             }
             else
             {
