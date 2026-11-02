@@ -19,8 +19,8 @@ namespace IsoBuilder.Core
             if (!localSave.TryLoad(out SaveData saveData))
             {
                 saveData.ApplySaveData(gameConfig);
-                SaveData = saveData;
             }
+            SaveData = saveData;
         }
 
         public void Save()
