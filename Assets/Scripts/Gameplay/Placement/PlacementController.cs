@@ -18,7 +18,7 @@ namespace IsoBuilder.Gameplay
 
         private IUIManager uiManager;
         private PlaceableCatalog placeableCatalog;
-        private PlaceableSpriteLoader placeableSpriteLoader;
+        private ISpriteLoader spriteLoader;
         private MapController mapController;
         private ObjectManager objectManager;
         private CameraController cameraController;
@@ -29,12 +29,12 @@ namespace IsoBuilder.Gameplay
         private PlacedObject currentPlacedObject;
         private CurrentSelectedObjectData currentSelectedObjectData;
 
-        public void Initialize(IUIManager uiManager, PlaceableCatalog placeableCatalog, PlaceableSpriteLoader placeableSpriteLoader,
+        public void Initialize(IUIManager uiManager, PlaceableCatalog placeableCatalog, ISpriteLoader spriteLoader,
             MapController mapController, ObjectManager objectManager, CameraController cameraController)
         {
             this.uiManager = uiManager;
             this.placeableCatalog = placeableCatalog;
-            this.placeableSpriteLoader = placeableSpriteLoader;
+            this.spriteLoader = spriteLoader;
             this.mapController = mapController;
             this.objectManager = objectManager;
             this.cameraController = cameraController;
@@ -52,7 +52,7 @@ namespace IsoBuilder.Gameplay
                 Debug.LogError($"placeable data not found : {placedObjectData.Id}");
                 return;
             }
-            Sprite placeableSprite = await placeableSpriteLoader.GetSprite(placeableData);
+            Sprite placeableSprite = await spriteLoader.GetSprite(placeableData.GetResourcePath(), placeableData.GetSpriteKey());
             if (!placeableSprite)
             {
                 return;
@@ -75,7 +75,7 @@ namespace IsoBuilder.Gameplay
 
         public async UniTask PlaceObject(PlaceableData placeableData)
         {
-            Sprite placeableSprite = await placeableSpriteLoader.GetSprite(placeableData);
+            Sprite placeableSprite = await spriteLoader.GetSprite(placeableData.GetResourcePath(), placeableData.GetSpriteKey() );
             if (!placeableSprite)
             {
                 return;

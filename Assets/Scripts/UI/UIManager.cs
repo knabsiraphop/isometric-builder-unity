@@ -28,13 +28,13 @@ namespace IsoBuilder.UI
             }
         }
 
-        public async UniTask ShowPlaceableCatalogs(PlaceableCatalog placeableCatalog, IPlaceableSpriteLoader placeableSpriteLoader, UnityAction<PlaceableData> onSelect)
+        public async UniTask ShowPlaceableCatalogs(PlaceableCatalog placeableCatalog, ISpriteLoader placeableSpriteLoader, UnityAction<PlaceableData> onSelect)
         {
             IEnumerable<PlaceableData> datas = placeableCatalog.GetPlaceableDatas();
 
             foreach (PlaceableData data in datas)
             {
-                Sprite sprite = await placeableSpriteLoader.GetSprite(data);
+                Sprite sprite = await placeableSpriteLoader.GetSprite(data.GetResourcePath(), data.GetSpriteKey());
                 AddButtonsToList(sprite, () => onSelect(data));
             }
             ShowPlaceableCatalog();
