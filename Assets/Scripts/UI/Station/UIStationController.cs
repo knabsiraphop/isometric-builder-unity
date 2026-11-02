@@ -9,12 +9,16 @@ namespace IsoBuilder.UI
     public class UIStationController
     {
         private readonly Transform container;
+        private readonly SaveDataStore saveDataStore;
+        private readonly GameConfig gameConfig;
         private StationType currentStationType;
 
         private Dictionary<StationType, UIBaseStation> stationUIs;
 
-        public UIStationController(Transform container)
+        public UIStationController(SaveDataStore saveDataStore, GameConfig gameConfig, Transform container)
         {
+            this.saveDataStore = saveDataStore;
+            this.gameConfig = gameConfig;
             this.container = container;
             stationUIs = new Dictionary<StationType, UIBaseStation>();
         }
@@ -35,10 +39,9 @@ namespace IsoBuilder.UI
 
             if (currentStationType != StationType.None)
             {
-                Debug.LogWarning($"A station UI is already open: {currentStationType}. Closing it before opening {stationType}.");
+                Debug.LogWarning($"A station UI is already open: {currentStationType}.");
                 return;
             }
-
             currentStationType = stationType;
             UIBaseStation stationUI = await GetStationUI(stationType);
             if (stationUI == null)
@@ -47,9 +50,7 @@ namespace IsoBuilder.UI
                 Debug.LogError($"Station UI for {stationType} not found.");
                 return;
             }
-            CloseCurrentStationUI();
-            currentStationType = stationType;
-            stationUI.gameObject.SetActive(true);
+            stationUI.Show();
         }
 
         private async UniTask<UIBaseStation> GetStationUI(StationType stationType)
@@ -64,7 +65,7 @@ namespace IsoBuilder.UI
                 return null;
             }
             stationUI = GameObject.Instantiate(stationUIPrefab, container);
-            stationUI.Initialize(() => CloseCurrentStationUI());
+            stationUI.Initialize(saveDataStore, gameConfig, () => CloseCurrentStationUI());
             stationUIs[stationType] = stationUI;
             return stationUI;
         }
@@ -77,7 +78,7 @@ namespace IsoBuilder.UI
             }
             if (stationUIs.TryGetValue(currentStationType, out UIBaseStation stationUI))
             {
-                stationUI.gameObject.SetActive(false);
+                stationUI.Hide();
                 currentStationType = StationType.None;
             }
         }
