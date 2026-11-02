@@ -31,6 +31,8 @@ namespace IsoBuilder
             saveDataStore.LoadData();
             loadSavePlacement = new LoadSavePlacement(saveDataStore);
 
+            uiManager.Initialize(saveDataStore, gameConfig);
+
             await mapController.Initialize(gameConfig.GridSystemConfig);
 
             cameraController.Initialize();

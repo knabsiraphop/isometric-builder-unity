@@ -17,11 +17,11 @@ namespace IsoBuilder.Gameplay
         private Action<PlacedItem> selectItem;
         private Action<PlacedItem> tapItem;
 
-        public ItemPressDetector(PointerInput pointerInput, Action<PlacedItem> selectItem, Action<PlacedItem> tabItem)
+        public ItemPressDetector(PointerInput pointerInput, Action<PlacedItem> selectItem, Action<PlacedItem> tapItem)
         {
             this.pointerInput = pointerInput;
             this.selectItem = selectItem;
-            this.tapItem = tabItem;
+            this.tapItem = tapItem;
         }
 
         public void OnPressedThisFrame()

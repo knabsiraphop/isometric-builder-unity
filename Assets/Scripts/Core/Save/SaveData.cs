@@ -7,10 +7,12 @@ namespace IsoBuilder.Core
     public class SaveData
     {
         public List<PlacedItemData> PlacedObjectDatas;
+        public int QuizProgress;
 
         public SaveData()
         {
             PlacedObjectDatas = new List<PlacedItemData>();
+            QuizProgress = 0;
         }
     }
 }
