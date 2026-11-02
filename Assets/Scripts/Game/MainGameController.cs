@@ -19,6 +19,7 @@ namespace IsoBuilder
         private ItemSpriteLoader itemSpriteLoader;
 
         private LoadSavePlacement loadSavePlacement;
+        private SaveDataStore saveDataStore;
 
         private async UniTaskVoid Start()
         {
@@ -26,7 +27,9 @@ namespace IsoBuilder
             itemCatalog.Initialize(gameConfig.ItemConfig, gameConfig.StationConfig);
             itemSpriteLoader = new ItemSpriteLoader();
 
-            loadSavePlacement = new LoadSavePlacement();
+            saveDataStore = new SaveDataStore();
+            saveDataStore.LoadData();
+            loadSavePlacement = new LoadSavePlacement(saveDataStore);
 
             await mapController.Initialize(gameConfig.GridSystemConfig);
 
@@ -35,8 +38,8 @@ namespace IsoBuilder
 
             objectManager.Initialize(mapController, loadSavePlacement);
 
-            placementController.Initialize(uiManager, itemCatalog, itemSpriteLoader, mapController, objectManager, cameraController, loadSavePlacement);
-            await placementController.ApplySave();
+            placementController.Initialize(uiManager, itemCatalog, itemSpriteLoader, mapController, objectManager, cameraController);
+            await loadSavePlacement.ApplySave(placementController.PlaceItemFromData);
 
             await uiManager.ShowItemCatalogs(itemCatalog, itemSpriteLoader, (data) => placementController.PlaceItem(data).Forget());
 

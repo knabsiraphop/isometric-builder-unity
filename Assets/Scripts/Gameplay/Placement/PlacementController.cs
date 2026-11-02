@@ -25,13 +25,12 @@ namespace IsoBuilder.Gameplay
         private PointerInput pointerInput;
         private ItemDragger itemDragger;
         private ItemPressDetector itemPressDetector;
-        private LoadSavePlacement loadSavePlacement;
 
         private PlacedItem currentPlacementItem;
         private CurrentSelectedItemData currentSelectedItemData;
 
         public void Initialize(IUIManager uiManager, ItemCatalog itemCatalog, ItemSpriteLoader itemSpriteLoader,
-            MapController mapController, ObjectManager objectManager, CameraController cameraController, LoadSavePlacement loadSavePlacement)
+            MapController mapController, ObjectManager objectManager, CameraController cameraController)
         {
             this.uiManager = uiManager;
             this.itemCatalog = itemCatalog;
@@ -39,16 +38,10 @@ namespace IsoBuilder.Gameplay
             this.mapController = mapController;
             this.objectManager = objectManager;
             this.cameraController = cameraController;
-            this.loadSavePlacement = loadSavePlacement;
 
             pointerInput = new PointerInput();
             itemDragger = new(cameraController, pointerInput, mapController);
             itemPressDetector = new(pointerInput, SelectItem, TapItem);
-        }
-
-        public async UniTask ApplySave()
-        {
-            await loadSavePlacement.ApplySave(PlaceItemFromData);
         }
 
         public async UniTask PlaceItemFromData(PlacedItemData placedObjectData)

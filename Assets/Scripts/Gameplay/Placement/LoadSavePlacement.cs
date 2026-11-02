@@ -8,22 +8,18 @@ namespace IsoBuilder.Gameplay
 {
     public class LoadSavePlacement
     {
-        private readonly LocalSave<SaveData> localSave;
+        private readonly Dictionary<int, PlacedItemData> placedItemDatas;
+        private readonly SaveDataStore saveDataStore;
 
-        private Dictionary<int, PlacedItemData> placedItemDatas;
-
-        public LoadSavePlacement()
+        public LoadSavePlacement(SaveDataStore saveDataStore)
         {
-            localSave = new LocalSave<SaveData>();
+            this.saveDataStore = saveDataStore;
             placedItemDatas = new Dictionary<int, PlacedItemData>();
         }
 
         public async UniTask ApplySave(Func<PlacedItemData, UniTask> placeItem)
         {
-            SaveData saveData = localSave.Load();
-            if (saveData == null)
-                saveData = new();
-            IEnumerable<PlacedItemData> sortDatas = saveData.PlacedObjectDatas.OrderBy(data => data.InstanceId);
+            IEnumerable<PlacedItemData> sortDatas = saveDataStore.SaveData.PlacedObjectDatas.OrderBy(data => data.InstanceId);
             foreach (PlacedItemData placedObjectData in sortDatas)
             {
                 placedItemDatas[placedObjectData.InstanceId] = placedObjectData;
@@ -73,11 +69,9 @@ namespace IsoBuilder.Gameplay
 
         private void Save()
         {
-            SaveData saveData = new SaveData
-            {
-                PlacedObjectDatas = new List<PlacedItemData>(placedItemDatas.Values)
-            };
-            localSave.Save(saveData);
+            List<PlacedItemData> placedObjectDatas = new List<PlacedItemData>(placedItemDatas.Values);
+            saveDataStore.SaveData.PlacedObjectDatas = placedObjectDatas;
+            saveDataStore.Save();
         }
 
         private bool IsEqual(PlacedItemData data, PlacedItem placedItem)
