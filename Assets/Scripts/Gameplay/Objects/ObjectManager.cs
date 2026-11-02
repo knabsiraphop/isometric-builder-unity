@@ -7,6 +7,7 @@ namespace IsoBuilder.Gameplay
     public class ObjectManager : MonoBehaviour
     {
         [SerializeField] private PlacedItem placedItemPrefab;
+        [SerializeField] private Transform itemContainer;
 
         private OccupancyGrid occupancyGrid;
         private PlacementRules placementRules;
@@ -41,7 +42,7 @@ namespace IsoBuilder.Gameplay
                 }
             }
 
-            placedItem = Instantiate(placedItemPrefab, transform);
+            placedItem = Instantiate(placedItemPrefab, itemContainer);
             int instanceId = saveInstanceId == -1 ? GetNextInstanceId() : saveInstanceId;
             placedItem.Initialize(itemData, sprite, instanceId);
 

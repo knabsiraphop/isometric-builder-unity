@@ -1,6 +1,5 @@
 using Cysharp.Threading.Tasks;
 using IsoBuilder.Core;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace IsoBuilder.Gameplay
@@ -44,7 +43,7 @@ namespace IsoBuilder.Gameplay
 
             pointerInput = new PointerInput();
             itemDragger = new(cameraController, pointerInput, mapController);
-            itemPressDetector = new(pointerInput, SelectItem);
+            itemPressDetector = new(pointerInput, SelectItem, TapItem);
         }
 
         public async UniTask ApplySave()
@@ -109,6 +108,7 @@ namespace IsoBuilder.Gameplay
             }
             SetHighlight(placedItem);
             currentPlacementItem = placedItem;
+            uiManager.HideItemCatalog();
             uiManager.ShowPlacementPanel(ConfirmPlacement, CancelPlacement, FlipPlacement);
             if (objectManager.IsItemConfirm(placedItem))
             {
@@ -116,6 +116,18 @@ namespace IsoBuilder.Gameplay
                 currentSelectedItemData.cellOrigin = placedItem.CellOrigin;
                 currentSelectedItemData.flipped = placedItem.Flipped;
                 currentSelectedItemData.worldPosition = placedItem.WorldCellPosition;
+            }
+        }
+
+        private void TapItem(PlacedItem placedItem)
+        {
+            if (currentPlacementItem != null)
+                return;
+            if (placedItem.ItemData.Type != ItemType.Station)
+                return;
+            if (itemCatalog.TryGetStationType(placedItem.ItemData.Id, out StationType stationType))
+            {
+                uiManager.ShowStationPanel(stationType);
             }
         }
 
@@ -166,6 +178,7 @@ namespace IsoBuilder.Gameplay
 
             currentPlacementItem = null;
             cellHighlighter.ClearAllHighlights();
+            uiManager.ShowItemCatalog();
             uiManager.HidePlacementPanel();
             itemDragger.Reset();
         }

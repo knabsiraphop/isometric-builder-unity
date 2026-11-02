@@ -14,3 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: IsoBuilder.Core::IsoBuilder.Core.GameConfig
   gridSystemConfig: {fileID: 11400000, guid: 6cc467d08d92fd444835b6a6dd812453, type: 2}
   itemConfig: {fileID: 11400000, guid: 4b0e6301666ddf943925d4aa69e03533, type: 2}
+  quizConfig: {fileID: 11400000, guid: 72da404272be38445b96da432f25bdbd, type: 2}
+  stationConfig: {fileID: 11400000, guid: 0c25dde514f6ec841bebe83f04dcbdb0, type: 2}

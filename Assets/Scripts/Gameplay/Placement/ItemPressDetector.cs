@@ -15,11 +15,13 @@ namespace IsoBuilder.Gameplay
         private PlacedItem lastPressedItem;
         private float pressedTime;
         private Action<PlacedItem> selectItem;
+        private Action<PlacedItem> tapItem;
 
-        public ItemPressDetector(PointerInput pointerInput, Action<PlacedItem> selectItem)
+        public ItemPressDetector(PointerInput pointerInput, Action<PlacedItem> selectItem, Action<PlacedItem> tabItem)
         {
             this.pointerInput = pointerInput;
             this.selectItem = selectItem;
+            this.tapItem = tabItem;
         }
 
         public void OnPressedThisFrame()
@@ -44,9 +46,7 @@ namespace IsoBuilder.Gameplay
         {
             if (!isPressed || lastPressedItem == null)
                 return;
-            Vector2 currentPoint = pointerInput.CurrentPosition();
-            Vector2 diff = pressedPoint - currentPoint;
-            if (Mathf.Abs(diff.x) >= HoldCancelDistancePx || Mathf.Abs(diff.y) >= HoldCancelDistancePx)
+            if (!IsWithinTapDistance())
             {
                 Reset();
                 return;
@@ -61,7 +61,18 @@ namespace IsoBuilder.Gameplay
 
         public void OnReleasedThisFrame()
         {
+            if (isPressed && lastPressedItem != null && IsWithinTapDistance())
+            {
+                tapItem?.Invoke(lastPressedItem);
+            }
             Reset();
+        }
+
+        private bool IsWithinTapDistance()
+        {
+            Vector2 currentPoint = pointerInput.CurrentPosition();
+            Vector2 diff = pressedPoint - currentPoint;
+            return Mathf.Abs(diff.x) < HoldCancelDistancePx && Mathf.Abs(diff.y) < HoldCancelDistancePx;
         }
 
         public void Reset()

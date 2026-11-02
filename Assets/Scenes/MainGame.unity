@@ -156,6 +156,11 @@ Grid:
   m_CorrespondingSourceObject: {fileID: 7800400073606159578, guid: 17b930fcb40bee744a0ef1593b3d24f7, type: 3}
   m_PrefabInstance: {fileID: 5187609173505304070}
   m_PrefabAsset: {fileID: 0}
+--- !u!224 &1041474197 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 2895008972148185388, guid: 8dcb6bfd318a87f49b551507351ad302, type: 3}
+  m_PrefabInstance: {fileID: 511940392698661625}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1839735485 &1151238558 stripped
 Tilemap:
   m_CorrespondingSourceObject: {fileID: 4068855357606985019, guid: 17b930fcb40bee744a0ef1593b3d24f7, type: 3}
@@ -250,6 +255,11 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &2051128765 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 6970143872731238827, guid: 17b930fcb40bee744a0ef1593b3d24f7, type: 3}
+  m_PrefabInstance: {fileID: 5187609173505304070}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &511940392698661625
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -342,13 +352,21 @@ PrefabInstance:
       propertyPath: m_Camera
       value: 
       objectReference: {fileID: 519420031}
+    - target: {fileID: 3461709805827542759, guid: 8dcb6bfd318a87f49b551507351ad302, type: 3}
+      propertyPath: m_AdditionalShaderChannelsFlag
+      value: 25
+      objectReference: {fileID: 0}
     - target: {fileID: 5955877116147814693, guid: 8dcb6bfd318a87f49b551507351ad302, type: 3}
       propertyPath: m_Name
       value: Canvas.UI
       objectReference: {fileID: 0}
+    - target: {fileID: 6450892812576935243, guid: 8dcb6bfd318a87f49b551507351ad302, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7252469397228792571, guid: 8dcb6bfd318a87f49b551507351ad302, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 0
+      value: 20
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -578,6 +596,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 138620412}
     - target: {fileID: 2881234622690538163, guid: 48be3bca539a2d14b918d7a7f2c28331, type: 3}
+      propertyPath: panelContainer
+      value: 
+      objectReference: {fileID: 1041474197}
+    - target: {fileID: 2881234622690538163, guid: 48be3bca539a2d14b918d7a7f2c28331, type: 3}
       propertyPath: uiPlacementPanel
       value: 
       objectReference: {fileID: 511940392698661626}
@@ -625,6 +647,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8577697895417561515, guid: 48be3bca539a2d14b918d7a7f2c28331, type: 3}
+      propertyPath: itemContainer
+      value: 
+      objectReference: {fileID: 2051128765}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
