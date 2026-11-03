@@ -51,6 +51,7 @@ namespace IsoBuilder.Utils
 
             T obj = GetObjectInstance<T>(prefab);
             obj.transform.SetParent(parent, false);
+            obj.transform.localScale = Vector3.one;
             obj.gameObject.SetActive(true);
             return obj;
         }

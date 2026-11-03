@@ -7,21 +7,15 @@ using UnityEngine.UI;
 
 namespace IsoBuilder.UI
 {
-    public class UIBaseStation : MonoBehaviour
+    public class UIBaseStation : MonoBehaviour, IDisposable
     {
         [SerializeField] private Button closeButton;
 
-        protected SaveDataStore saveDataStore;
-        protected GameConfig gameConfig;
-        protected Pooling pooling;
-        protected ISpriteLoader spriteLoader;
+        protected GameContext GameContext { get; private set; }
 
-        public virtual void Initialize(SaveDataStore saveDataStore, GameConfig gameConfig, Pooling pooling, ISpriteLoader spriteLoader, UnityAction close)
+        public virtual void Initialize(GameContext gameContext, UnityAction close)
         {
-            this.saveDataStore = saveDataStore;
-            this.gameConfig = gameConfig;
-            this.pooling = pooling;
-            this.spriteLoader = spriteLoader;
+            GameContext = gameContext;
 
             if (closeButton != null)
             {
@@ -37,6 +31,10 @@ namespace IsoBuilder.UI
         public virtual void Hide()
         {
             gameObject.SetActive(false);
+        }
+
+        public virtual void Dispose()
+        {
         }
     }
 }

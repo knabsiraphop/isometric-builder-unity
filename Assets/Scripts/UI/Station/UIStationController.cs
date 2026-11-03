@@ -9,21 +9,15 @@ namespace IsoBuilder.UI
     public class UIStationController
     {
         private readonly Transform container;
-        private readonly SaveDataStore saveDataStore;
-        private readonly GameConfig gameConfig;
-        private readonly Pooling pooling;
-        private readonly ISpriteLoader spriteLoader;
+        private readonly GameContext gameContext;
         private StationType currentStationType;
 
         private Dictionary<StationType, UIBaseStation> stationUIs;
 
-        public UIStationController(SaveDataStore saveDataStore, GameConfig gameConfig, Transform container, Pooling pooling, ISpriteLoader spriteLoader)
+        public UIStationController(GameContext gameContext, Transform container)
         {
-            this.saveDataStore = saveDataStore;
-            this.gameConfig = gameConfig;
+            this.gameContext = gameContext;
             this.container = container;
-            this.pooling = pooling;
-            this.spriteLoader = spriteLoader;
             stationUIs = new Dictionary<StationType, UIBaseStation>();
         }
 
@@ -69,7 +63,7 @@ namespace IsoBuilder.UI
                 return null;
             }
             stationUI = GameObject.Instantiate(stationUIPrefab, container);
-            stationUI.Initialize(saveDataStore, gameConfig, pooling, spriteLoader, () => CloseCurrentStationUI());
+            stationUI.Initialize(gameContext, () => CloseCurrentStationUI());
             stationUIs[stationType] = stationUI;
             return stationUI;
         }
@@ -83,6 +77,7 @@ namespace IsoBuilder.UI
             if (stationUIs.TryGetValue(currentStationType, out UIBaseStation stationUI))
             {
                 stationUI.Hide();
+                stationUI.Dispose();
                 currentStationType = StationType.None;
             }
         }

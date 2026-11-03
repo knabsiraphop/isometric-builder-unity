@@ -14,27 +14,33 @@ namespace IsoBuilder.UI
         private MixerConfig mixerConfig;
         private MixerStateData mixerStateData;
 
-        public override void Initialize(SaveDataStore saveDataStore, GameConfig gameConfig, Pooling pooling, ISpriteLoader spriteLoader, UnityAction close)
+        public override void Initialize(GameContext gameContext, UnityAction close)
         {
-            base.Initialize(saveDataStore, gameConfig, pooling, spriteLoader, close);
-            mixerConfig = gameConfig.MixerConfig;
-            mixerStateData = saveDataStore.SaveData.MixerStateData;
-            uIMixerIngredient.Initialize(pooling, spriteLoader);
+            base.Initialize(gameContext, close);
+            mixerConfig = gameContext.Config.MixerConfig;
+            mixerStateData = gameContext.SaveDataStore.SaveData.MixerStateData;
+            uIMixerIngredient.Initialize(gameContext.Pooling, gameContext.SpriteLoader, gameContext.InventoryItemCatalog);
         }
 
         public override void Show()
         {
             base.Show();
-            uIMixerIngredient.ShowIngredients(saveDataStore.SaveData.InventoryItemInstanceDatas, OnSelectIngredient).Forget();
+            uIMixerIngredient.ShowIngredients(GameContext.SaveDataStore.SaveData.InventoryItemInstanceDatas, OnSelectIngredient).Forget();
         }
 
         private void OnSelectIngredient(int id)
         {
-            //var data = saveDataStore.SaveData.InventoryItemInstanceDatas.FirstOrDefault(x => x.Id == id);
+            //var data = gameContext.SaveDataStore.SaveData.InventoryItemInstanceDatas.FirstOrDefault(x => x.Id == id);
             //if (data != null)
             {
                 Debug.Log($"Selected ingredient: {id}");
             }
+        }
+
+        public override void Dispose()
+        {
+            uIMixerIngredient.Dispose();
+            base.Dispose();
         }
     }
 }

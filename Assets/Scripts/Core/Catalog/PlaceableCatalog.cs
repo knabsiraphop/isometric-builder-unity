@@ -8,7 +8,7 @@ namespace IsoBuilder.Core
         private Dictionary<int, PlaceableData> placeableDatas;
         private Dictionary<int, StationType> stationTypes;
 
-        public void Initialize(PlaceableConfig placeableConfig, StationConfig stationConfig)
+        public PlaceableCatalog(PlaceableConfig placeableConfig, StationConfig stationConfig)
         {
             placeableDatas = new Dictionary<int, PlaceableData>();
             stationTypes = new Dictionary<int, StationType>();

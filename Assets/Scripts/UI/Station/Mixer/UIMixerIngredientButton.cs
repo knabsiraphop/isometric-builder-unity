@@ -19,5 +19,12 @@ namespace IsoBuilder.UI
             button.onClick.RemoveAllListeners();
             button.onClick.AddListener(() => onClick(id));
         }
+
+
+        public void Clear() 
+        {
+            icon.sprite = null;
+            amountText.text = string.Empty;
+        }
     }
 }

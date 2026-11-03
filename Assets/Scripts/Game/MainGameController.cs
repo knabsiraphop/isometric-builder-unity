@@ -17,23 +17,16 @@ namespace IsoBuilder
         [SerializeField] private ObjectManager objectManager;
         [SerializeField] private Pooling pooling;
 
-        private PlaceableCatalog placeableCatalog;
-        private SpriteLoader spriteLoader;
-
         private LoadSavePlacement loadSavePlacement;
-        private SaveDataStore saveDataStore;
+        private GameContext gameContext;
 
         private async UniTaskVoid Start()
         {
-            placeableCatalog = new PlaceableCatalog();
-            placeableCatalog.Initialize(gameConfig.PlaceableConfig, gameConfig.StationConfig);
-            spriteLoader = new SpriteLoader();
+            gameContext = new GameContext(gameConfig, new SpriteLoader(), pooling);
 
-            saveDataStore = new SaveDataStore(gameConfig);
-            saveDataStore.LoadData();
-            loadSavePlacement = new LoadSavePlacement(saveDataStore);
+            loadSavePlacement = new LoadSavePlacement(gameContext.SaveDataStore);
 
-            uiManager.Initialize(saveDataStore, gameConfig, pooling, spriteLoader);
+            uiManager.Initialize(gameContext);
 
             await mapController.Initialize(gameConfig.GridSystemConfig);
 
@@ -42,10 +35,10 @@ namespace IsoBuilder
 
             objectManager.Initialize(mapController, loadSavePlacement, pooling);
 
-            placementController.Initialize(uiManager, placeableCatalog, spriteLoader, mapController, objectManager, cameraController);
+            placementController.Initialize(uiManager, gameContext.PlaceableCatalog, gameContext.SpriteLoader, mapController, objectManager, cameraController);
             await loadSavePlacement.ApplySave(placementController.PlaceObjectFromData);
 
-            await uiManager.ShowPlaceableCatalogs(placeableCatalog, spriteLoader, (data) => placementController.PlaceObject(data).Forget());
+            await uiManager.ShowPlaceableCatalogs(gameContext.PlaceableCatalog, gameContext.SpriteLoader, (data) => placementController.PlaceObject(data).Forget());
 
             uiManager.SetActiveLoadingScreen(false);
         }

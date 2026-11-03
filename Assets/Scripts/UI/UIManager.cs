@@ -16,9 +16,9 @@ namespace IsoBuilder.UI
 
         private UIStationController stationController;
 
-        public void Initialize(SaveDataStore saveDataStore, GameConfig gameConfig, Pooling pooling, ISpriteLoader spriteLoader)
+        public void Initialize(GameContext gameContext)
         {
-            stationController = new UIStationController(saveDataStore, gameConfig, panelContainer, pooling, spriteLoader);
+            stationController = new UIStationController(gameContext, panelContainer);
         }
 
         public void SetActiveLoadingScreen(bool isActive)
