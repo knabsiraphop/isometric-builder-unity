@@ -1,5 +1,6 @@
 using Cysharp.Threading.Tasks;
 using IsoBuilder.Core;
+using IsoBuilder.Utils;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
@@ -15,9 +16,9 @@ namespace IsoBuilder.UI
 
         private UIStationController stationController;
 
-        public void Initialize(SaveDataStore saveDataStore, GameConfig gameConfig)
+        public void Initialize(SaveDataStore saveDataStore, GameConfig gameConfig, Pooling pooling, ISpriteLoader spriteLoader)
         {
-            stationController = new UIStationController(saveDataStore, gameConfig, panelContainer);
+            stationController = new UIStationController(saveDataStore, gameConfig, panelContainer, pooling, spriteLoader);
         }
 
         public void SetActiveLoadingScreen(bool isActive)

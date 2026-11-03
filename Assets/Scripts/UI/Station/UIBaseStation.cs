@@ -1,4 +1,5 @@
 using IsoBuilder.Core;
+using IsoBuilder.Utils;
 using System;
 using UnityEngine;
 using UnityEngine.Events;
@@ -12,11 +13,15 @@ namespace IsoBuilder.UI
 
         protected SaveDataStore saveDataStore;
         protected GameConfig gameConfig;
+        protected Pooling pooling;
+        protected ISpriteLoader spriteLoader;
 
-        public virtual void Initialize(SaveDataStore saveDataStore, GameConfig gameConfig, UnityAction close)
+        public virtual void Initialize(SaveDataStore saveDataStore, GameConfig gameConfig, Pooling pooling, ISpriteLoader spriteLoader, UnityAction close)
         {
             this.saveDataStore = saveDataStore;
             this.gameConfig = gameConfig;
+            this.pooling = pooling;
+            this.spriteLoader = spriteLoader;
 
             if (closeButton != null)
             {

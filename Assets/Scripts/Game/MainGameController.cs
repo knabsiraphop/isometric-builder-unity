@@ -33,7 +33,7 @@ namespace IsoBuilder
             saveDataStore.LoadData();
             loadSavePlacement = new LoadSavePlacement(saveDataStore);
 
-            uiManager.Initialize(saveDataStore, gameConfig);
+            uiManager.Initialize(saveDataStore, gameConfig, pooling, spriteLoader);
 
             await mapController.Initialize(gameConfig.GridSystemConfig);
 

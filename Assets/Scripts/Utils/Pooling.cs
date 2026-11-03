@@ -42,16 +42,16 @@ namespace IsoBuilder.Utils
             return obj;
         }
 
-        public GameObject GetObjectUI(GameObject prefab, Transform parent)
+        public T GetObjectUI<T>(T prefab, Transform parent) where T : Component
         {
             if (!poolObjects.ContainsKey(prefab.name))
             {
                 CreatePool(prefab.name);
             }
 
-            GameObject obj = GetObjectInstance(prefab);
+            T obj = GetObjectInstance<T>(prefab);
             obj.transform.SetParent(parent, false);
-            obj.SetActive(true);
+            obj.gameObject.SetActive(true);
             return obj;
         }
 
@@ -63,6 +63,22 @@ namespace IsoBuilder.Utils
             poolParent.transform.SetParent(gameObject.transform);
             poolParents[poolName] = poolParent.transform;
             poolObjects[poolName] = new Stack<GameObject>();
+        }
+
+        private T GetObjectInstance<T>(T prefab) where T : Component
+        {
+            Stack<GameObject> objectStack = poolObjects[prefab.name];
+            T obj;
+            if (poolObjects[prefab.name].Count > 0)
+            {
+                obj = objectStack.Pop().GetComponent<T>();
+            }
+            else
+            {
+                obj = Instantiate(prefab).GetComponent<T>();
+            }
+
+            return obj;
         }
 
         private GameObject GetObjectInstance(GameObject prefab)

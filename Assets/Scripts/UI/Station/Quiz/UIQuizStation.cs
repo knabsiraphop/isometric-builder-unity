@@ -1,6 +1,7 @@
-using UnityEngine;
-using TMPro;
 using IsoBuilder.Core;
+using IsoBuilder.Utils;
+using TMPro;
+using UnityEngine;
 using UnityEngine.Events;
 
 namespace IsoBuilder.UI
@@ -25,9 +26,9 @@ namespace IsoBuilder.UI
         private QuizData currentQuizData;
         private int currentShowQuizId = -1;
 
-        public override void Initialize(SaveDataStore saveDataStore, GameConfig gameConfig, UnityAction close)
+        public override void Initialize(SaveDataStore saveDataStore, GameConfig gameConfig, Pooling pooling, ISpriteLoader spriteLoader, UnityAction close)
         {
-            base.Initialize(saveDataStore, gameConfig, close);
+            base.Initialize(saveDataStore, gameConfig, pooling, spriteLoader, close);
 
             quizConfig = gameConfig.QuizConfig;
             for (int i = 0; i < choices.Length; i++)

@@ -11,15 +11,19 @@ namespace IsoBuilder.UI
         private readonly Transform container;
         private readonly SaveDataStore saveDataStore;
         private readonly GameConfig gameConfig;
+        private readonly Pooling pooling;
+        private readonly ISpriteLoader spriteLoader;
         private StationType currentStationType;
 
         private Dictionary<StationType, UIBaseStation> stationUIs;
 
-        public UIStationController(SaveDataStore saveDataStore, GameConfig gameConfig, Transform container)
+        public UIStationController(SaveDataStore saveDataStore, GameConfig gameConfig, Transform container, Pooling pooling, ISpriteLoader spriteLoader)
         {
             this.saveDataStore = saveDataStore;
             this.gameConfig = gameConfig;
             this.container = container;
+            this.pooling = pooling;
+            this.spriteLoader = spriteLoader;
             stationUIs = new Dictionary<StationType, UIBaseStation>();
         }
 
@@ -65,14 +69,14 @@ namespace IsoBuilder.UI
                 return null;
             }
             stationUI = GameObject.Instantiate(stationUIPrefab, container);
-            stationUI.Initialize(saveDataStore, gameConfig, () => CloseCurrentStationUI());
+            stationUI.Initialize(saveDataStore, gameConfig, pooling, spriteLoader, () => CloseCurrentStationUI());
             stationUIs[stationType] = stationUI;
             return stationUI;
         }
 
         private void CloseCurrentStationUI()
         {
-            if(currentStationType == StationType.None)
+            if (currentStationType == StationType.None)
             {
                 return;
             }

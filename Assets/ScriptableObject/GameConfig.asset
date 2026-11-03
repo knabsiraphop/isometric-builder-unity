@@ -18,3 +18,4 @@ MonoBehaviour:
   <StationConfig>k__BackingField: {fileID: 11400000, guid: 0c25dde514f6ec841bebe83f04dcbdb0, type: 2}
   <MixerConfig>k__BackingField: {fileID: 11400000, guid: 682374059c869dd4eb132d7006c533ad, type: 2}
   <InventoryItemMasterData>k__BackingField: {fileID: 11400000, guid: ea2a2367bb1c19448be160ed4925abfb, type: 2}
+  <InventoryStartData>k__BackingField: {fileID: 11400000, guid: 93d77ab4a1b82e44eb9d1717c15b0958, type: 2}

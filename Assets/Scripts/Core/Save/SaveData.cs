@@ -8,15 +8,18 @@ namespace IsoBuilder.Core
         public PlacedObjectData[] PlacedObjectDatas;
         public int QuizProgress;
         public InventoryItemInstanceData[] InventoryItemInstanceDatas;
-        public MixerStateData[] MixerStateDatas;
+        public MixerStateData MixerStateData;
 
         public void ApplySaveData(GameConfig gameConfig)
         {
             PlacedObjectDatas = null;
             QuizProgress = 0;
-            InventoryItemInstanceDatas = gameConfig.InventoryStartData.InventoryItemInstanceDatas;
 
-            MixerStateDatas = null;
+            InventoryItemInstanceData[] inventoryItemInstanceDatas = gameConfig.InventoryStartData.InventoryItemInstanceDatas;
+            InventoryItemInstanceDatas = new InventoryItemInstanceData[inventoryItemInstanceDatas.Length];
+            Array.Copy(inventoryItemInstanceDatas, InventoryItemInstanceDatas, inventoryItemInstanceDatas.Length);
+
+            MixerStateData = null;
         }
     }
 }

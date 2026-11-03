@@ -4,6 +4,6 @@ namespace IsoBuilder.Core
     {
         public int MixerRecipeId;
         public int PlacedObjectInstanceId;
-        public long StartTimeStamp;
+        public long StartTimeStamp = 0;
     }
 }
