@@ -19,7 +19,7 @@ namespace IsoBuilder.Core
             InventoryItemInstanceDatas = new InventoryItemInstanceData[inventoryItemInstanceDatas.Length];
             Array.Copy(inventoryItemInstanceDatas, InventoryItemInstanceDatas, inventoryItemInstanceDatas.Length);
 
-            MixerStateData = null;
+            MixerStateData = new();
         }
     }
 }

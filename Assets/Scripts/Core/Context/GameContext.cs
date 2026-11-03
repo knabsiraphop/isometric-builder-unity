@@ -10,6 +10,7 @@ namespace IsoBuilder.Core
         public InventoryItemCatalog InventoryItemCatalog { get; private set; }
         public ISpriteLoader SpriteLoader { get; private set; }
         public Pooling Pooling { get; private set; }
+        public Inventory Inventory { get; private set; }
 
         public GameContext(GameConfig config, ISpriteLoader spriteLoader, Pooling pooling)
         {
@@ -21,6 +22,7 @@ namespace IsoBuilder.Core
             PlaceableCatalog = new PlaceableCatalog(config.PlaceableConfig, config.StationConfig);
 
             InventoryItemCatalog = new InventoryItemCatalog(config.InventoryItemMasterData);
+            Inventory = new(SaveDataStore);
 
             SpriteLoader = spriteLoader;
             Pooling = pooling;

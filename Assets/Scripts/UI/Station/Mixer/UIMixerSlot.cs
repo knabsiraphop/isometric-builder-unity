@@ -9,15 +9,14 @@ namespace IsoBuilder.UI
         [SerializeField] private Button button;
         [SerializeField] private Image iconImage;
 
-        public int Id { get; private set; }
+        private int index;
 
-        public void Initialize(UnityAction onClick)
+        public int Id { get; set; } = -1;
+
+        public void Initialize(int index, UnityAction<int, int> clearSlot)
         {
-            button.onClick.AddListener(() =>
-            {
-                onClick();
-                ClearIcon();
-            });
+            this.index = index;
+            button.onClick.AddListener(() => clearSlot(Id, this.index));
         }
 
         public void SetIcon(Sprite sprite, int id)
@@ -32,11 +31,6 @@ namespace IsoBuilder.UI
             iconImage.enabled = false;
             iconImage.sprite = null;
             Id = -1;
-        }
-
-        public bool IsEmpty()
-        {
-            return Id == -1;
         }
     }
 }

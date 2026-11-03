@@ -22,6 +22,7 @@ namespace IsoBuilder.Gameplay
                 return cachedSprite;
             }
             Sprite sprite = await ResourceLoader.LoadResourceAsync<Sprite>(path);
+            spriteCaches[spriteKey] = sprite;
             return sprite;
         }
 
@@ -39,7 +40,7 @@ namespace IsoBuilder.Gameplay
 
         public void ClearAllCache()
         {
-            throw new System.NotImplementedException();
+
         }
     }
 }

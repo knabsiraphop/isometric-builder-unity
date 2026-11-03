@@ -42,9 +42,17 @@ namespace IsoBuilder.UI
             foreach (InventoryItemInstanceData data in instanceDatas)
             {
                 UIMixerIngredientButton button = pooling.GetObjectUI(buttonPrefab, container);
-                Sprite sprite = await spriteLoader.GetSprite(inventoryItemCatalog.GetResourcePath(data.Id), inventoryItemCatalog.GetSpriteKey(data.Id));
+                Sprite sprite = await spriteLoader.GetInventoryItemSprite(inventoryItemCatalog, data.Id);
                 button.Initialize(sprite, data.Id, data.Amount, selectIngredient);
                 ingredientButtons[data.Id] = button;
+            }
+        }
+
+        public void SetSelectButton(int id, bool isSelect)
+        {
+            if (ingredientButtons.TryGetValue(id, out UIMixerIngredientButton button))
+            {
+                button.SetSelect(isSelect);
             }
         }
 

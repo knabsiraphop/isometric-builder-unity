@@ -13,19 +13,23 @@ MonoBehaviour:
   m_Name: MixerConfig
   m_EditorClassIdentifier: IsoBuilder.Core::IsoBuilder.Core.MixerConfig
   MixerRecipeDatas:
-  - ResultId: 2
+  - MixerRecipeId: 0
+    ResultId: 2
     Ingredient1Id: 0
     Ingredient2Id: 1
     duration: 180
-  - ResultId: 4
+  - MixerRecipeId: 1
+    ResultId: 4
     Ingredient1Id: 0
     Ingredient2Id: 3
     duration: 180
-  - ResultId: 6
+  - MixerRecipeId: 2
+    ResultId: 6
     Ingredient1Id: 0
     Ingredient2Id: 5
     duration: 180
-  - ResultId: 8
+  - MixerRecipeId: 3
+    ResultId: 8
     Ingredient1Id: 0
     Ingredient2Id: 7
     duration: 180

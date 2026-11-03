@@ -59,7 +59,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -85,6 +85,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2003724361192833048}
   - component: {fileID: 4991490096211995344}
+  - component: {fileID: 2635190800687273703}
   m_Layer: 0
   m_Name: UI.Mixer.Slot
   m_TagString: Untagged
@@ -128,6 +129,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.AspectRatioFitter
   m_AspectMode: 1
   m_AspectRatio: 1
+--- !u!114 &2635190800687273703
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5831740437612936328}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1702fefa33da804469ff195b1ae2dad1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: IsoBuilder.UI::IsoBuilder.UI.UIMixerSlot
+  button: {fileID: 9044781756122376599}
+  iconImage: {fileID: 590714289690532613}
 --- !u!1 &6772526114222310495
 GameObject:
   m_ObjectHideFlags: 0
