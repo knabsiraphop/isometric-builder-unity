@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 31ed03f8af0377d43afd6d37cd584465
+guid: 1e409a6b41978254c98884b821fe0223
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 6533115755915052667
-    second: 02_dish_2_0
+      213: 6452401071156887674
+    second: 39_friedegg_dish_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -48,7 +48,7 @@ TextureImporter:
   compressionQuality: 50
   spriteMode: 1
   spriteExtrude: 1
-  spriteMeshType: 1
+  spriteMeshType: 0
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
   spritePixelsToUnits: 100
@@ -113,13 +113,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: 02_dish_2_0
+      name: 39_friedegg_dish_0
       rect:
         serializedVersion: 2
         x: 3
-        y: 3
+        y: 0
         width: 125
-        height: 114
+        height: 113
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -128,8 +128,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: b7603d38a2a4aaa50800000000000000
-      internalID: 6533115755915052667
+      spriteID: a7008a286988b8950800000000000000
+      internalID: 6452401071156887674
       vertices: []
       indices: 
       edges: []
@@ -148,7 +148,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      02_dish_2_0: 6533115755915052667
+      39_friedegg_dish_0: 6452401071156887674
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
