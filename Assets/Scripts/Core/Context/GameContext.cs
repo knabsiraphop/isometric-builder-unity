@@ -11,8 +11,9 @@ namespace IsoBuilder.Core
         public ISpriteLoader SpriteLoader { get; private set; }
         public Pooling Pooling { get; private set; }
         public Inventory Inventory { get; private set; }
+        public IBuildController BuildController { get; private set; }
 
-        public GameContext(GameConfig config, ISpriteLoader spriteLoader, Pooling pooling)
+        public GameContext(GameConfig config, ISpriteLoader spriteLoader, Pooling pooling, IBuildController buildController)
         {
             Config = config;
 
@@ -26,6 +27,8 @@ namespace IsoBuilder.Core
 
             SpriteLoader = spriteLoader;
             Pooling = pooling;
+
+            BuildController = buildController;
         }
     }
 }

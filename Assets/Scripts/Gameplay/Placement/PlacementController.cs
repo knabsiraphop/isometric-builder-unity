@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace IsoBuilder.Gameplay
 {
-    public class PlacementController : MonoBehaviour
+    public class PlacementController : MonoBehaviour, IBuildController
     {
         private struct CurrentSelectedObjectData
         {
@@ -75,7 +75,7 @@ namespace IsoBuilder.Gameplay
 
         public async UniTask PlaceObject(PlaceableData placeableData)
         {
-            Sprite placeableSprite = await spriteLoader.GetSprite(placeableData.GetResourcePath(), placeableData.GetSpriteKey() );
+            Sprite placeableSprite = await spriteLoader.GetSprite(placeableData.GetResourcePath(), placeableData.GetSpriteKey());
             if (!placeableSprite)
             {
                 return;
@@ -214,6 +214,19 @@ namespace IsoBuilder.Gameplay
             cellHighlighter.ClearAllHighlights();
             bool canPlace = objectManager.CanPlaceObject(placedObject, placedObject.CellOrigin, placedObject.Flipped);
             cellHighlighter.HighlightCells(placedObject.PlaceableData.GetCells(placedObject.CellOrigin, placedObject.Flipped), canPlace);
+        }
+
+        public void SetBuildMode(BuildMode mode)
+        {
+            switch (mode)
+            {
+                case BuildMode.None:
+                    break;
+                case BuildMode.Build:
+                    break;
+                case BuildMode.Destroy:
+                    break;
+            }
         }
     }
 }
