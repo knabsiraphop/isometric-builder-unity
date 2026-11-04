@@ -81,19 +81,20 @@ namespace IsoBuilder.Gameplay
             return 0f;
         }
 
-        public int CurrentTouch()
+        public bool IsTwoTouch()
         {
             if (Touchscreen.current == null)
-                return 0;
-
+                return false;
             ReadOnlyArray<TouchControl> touches = Touchscreen.current.touches;
-            int touchCount = 0;
-            foreach (var touch in touches)
-            {
-                if (touch.IsPressed())
-                    touchCount++;
-            }
-            return touchCount;
+            if (touches.Count < 2)
+                return false;
+            return touches[0].press.isPressed && touches[1].press.isPressed;
+        }
+
+        public float TouchDistance()
+        {
+            ReadOnlyArray<TouchControl> touches = Touchscreen.current.touches;
+            return Vector2.Distance(touches[0].position.ReadValue(), touches[1].position.ReadValue());
         }
     }
 }

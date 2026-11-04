@@ -205,6 +205,14 @@ namespace IsoBuilder.Gameplay
 
             cameraPanZoom.Update();
 
+            if (pointerInput.IsTwoTouch())
+            {
+                placeableObjectDragger.Reset();
+                placeableObjectPressDetector.Reset();
+                cameraPanZoom.Reset();
+                return;
+            }
+
             if (pointerInput.WasPressedThisFrame())
             {
                 placeableObjectDragger.OnPressedThisFrame(currentPlacedObject);

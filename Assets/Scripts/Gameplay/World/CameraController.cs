@@ -77,6 +77,12 @@ namespace IsoBuilder.Gameplay
             float size = Mathf.Clamp(cam.orthographicSize - increment, fitSize / 2f, fitSize);
             SetCameraSize(size);
         }
+        
+        public void PinchZoom(float factor)
+        {
+            float size = Mathf.Clamp(cam.orthographicSize * factor, fitSize / 2f, fitSize);
+            SetCameraSize(size);
+        }
 
         private void OnDestroy()
         {
