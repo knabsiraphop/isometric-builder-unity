@@ -67,7 +67,9 @@ namespace IsoBuilder.Gameplay
 
         public void MoveCamera(Vector3 position)
         {
-            cam.transform.position = new Vector3(position.x, position.y, cam.transform.position.z);
+            var x = Mathf.Clamp(position.x, mapBounds.min.x, mapBounds.max.x);
+            var y = Mathf.Clamp(position.y, mapBounds.min.y, mapBounds.max.y);
+            cam.transform.position = new Vector3(x, y, cam.transform.position.z);
         }
 
         public void Zoom(float increment)
