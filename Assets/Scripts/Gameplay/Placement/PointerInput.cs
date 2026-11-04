@@ -2,6 +2,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.Controls;
+using UnityEngine.InputSystem.Utilities;
 using UnityEngine.UI;
 
 namespace IsoBuilder.Gameplay
@@ -70,6 +72,28 @@ namespace IsoBuilder.Gameplay
                 }
             }
             return false;
+        }
+
+        public float CurrentScroll()
+        {
+            if (IsMouse)
+                return Mouse.current.scroll.ReadValue().y;
+            return 0f;
+        }
+
+        public int CurrentTouch()
+        {
+            if (Touchscreen.current == null)
+                return 0;
+
+            ReadOnlyArray<TouchControl> touches = Touchscreen.current.touches;
+            int touchCount = 0;
+            foreach (var touch in touches)
+            {
+                if (touch.IsPressed())
+                    touchCount++;
+            }
+            return touchCount;
         }
     }
 }
