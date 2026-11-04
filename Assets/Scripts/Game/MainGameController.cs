@@ -22,6 +22,8 @@ namespace IsoBuilder
 
         private async UniTaskVoid Start()
         {
+            Application.targetFrameRate = 60;
+
             gameContext = new GameContext(gameConfig, new SpriteLoader(), pooling, placementController, uiManager.Popup);
 
             loadSavePlacement = new LoadSavePlacement(gameContext.SaveDataStore);
