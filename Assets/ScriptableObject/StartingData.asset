@@ -9,8 +9,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 541e25b416e76d24693e6d0e7323e4e7, type: 3}
-  m_Name: InventoryStartData
+  m_Script: {fileID: 11500000, guid: d9783f73a3dea814887c5c56271a1d23, type: 3}
+  m_Name: StartingData
   m_EditorClassIdentifier: IsoBuilder.Core::IsoBuilder.Core.InventoryStartData
   InventoryItemInstanceDatas:
   - Id: 0
@@ -23,3 +23,8 @@ MonoBehaviour:
     Amount: 100
   - Id: 7
     Amount: 100
+  PlacedObjectDatas:
+  - InstanceId: 1
+    Id: 13
+    CellOrigin: {x: 25, y: 10}
+    Flipped: 0
