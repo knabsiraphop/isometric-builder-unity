@@ -26,6 +26,7 @@ namespace IsoBuilder.Gameplay
         private PlaceableObjectDragger placeableObjectDragger;
         private PlaceableObjectPressDetector placeableObjectPressDetector;
         private IUIPopup popup;
+        private CameraPanZoom cameraPanZoom;
 
         private PlacedObject currentPlacedObject;
         private CurrentSelectedObjectData currentSelectedObjectData;
@@ -42,6 +43,7 @@ namespace IsoBuilder.Gameplay
             popup = gameContext.Popup;
 
             pointerInput = new PointerInput();
+            cameraPanZoom = new(cameraController, pointerInput);
             placeableObjectDragger = new(cameraController, pointerInput, mapController);
             placeableObjectPressDetector = new(pointerInput, SelectObject, TapObject);
         }
@@ -114,6 +116,7 @@ namespace IsoBuilder.Gameplay
                 currentSelectedObjectData.flipped = placedObject.Flipped;
                 currentSelectedObjectData.worldPosition = placedObject.WorldCellPosition;
             }
+            cameraPanZoom.Reset();
         }
 
         private void TapObject(PlacedObject placedObject)
@@ -199,10 +202,22 @@ namespace IsoBuilder.Gameplay
         {
             if (pointerInput == null)
                 return;
+
+            cameraPanZoom.Update();
+
+            if (pointerInput.IsTwoTouch())
+            {
+                placeableObjectDragger.Reset();
+                placeableObjectPressDetector.Reset();
+                cameraPanZoom.Reset();
+                return;
+            }
+
             if (pointerInput.WasPressedThisFrame())
             {
                 placeableObjectDragger.OnPressedThisFrame(currentPlacedObject);
                 placeableObjectPressDetector.OnPressedThisFrame();
+                cameraPanZoom.OnPressedThisFrame(currentPlacedObject);
             }
 
             if (pointerInput.IsPressed())
@@ -213,12 +228,14 @@ namespace IsoBuilder.Gameplay
                     SetHighlight(currentPlacedObject);
                 }
                 placeableObjectPressDetector.OnPressed();
+                cameraPanZoom.OnPressed();
             }
 
             if (pointerInput.WasReleasedThisFrame())
             {
                 placeableObjectDragger.OnReleasedThisFrame();
                 placeableObjectPressDetector.OnReleasedThisFrame();
+                cameraPanZoom.OnReleasedThisFrame();
             }
         }
 

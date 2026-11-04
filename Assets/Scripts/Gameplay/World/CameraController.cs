@@ -9,6 +9,8 @@ namespace IsoBuilder.Gameplay
         [SerializeField] private Camera cam;
         [SerializeField] private CameraSafeArea cameraSafeArea;
 
+        private float fitSize;
+
         private Bounds mapBounds;
 
         public void Initialize()
@@ -16,10 +18,16 @@ namespace IsoBuilder.Gameplay
             cameraSafeArea.OnSafeAreaChanged += RefitCamera;
         }
 
+        public void ResetCamera()
+        {
+            MoveCamera(mapBounds.center);
+            RefitCamera();
+        }
+
         public void FitToBounds(Bounds bounds)
         {
             mapBounds = bounds;
-            cam.transform.position = new Vector3(bounds.center.x, bounds.center.y, cam.transform.position.z);
+            MoveCamera(bounds.center);
             RefitCamera();
         }
 
@@ -33,8 +41,8 @@ namespace IsoBuilder.Gameplay
             float halfHeight = mapBounds.size.y / 2f;
             float halfWidthAsSize = mapBounds.size.x / (2f * cam.aspect);
 
-            float size = Mathf.Max(halfHeight, halfWidthAsSize) * boundsPadding;
-            SetCameraSize(size);
+            fitSize = Mathf.Max(halfHeight, halfWidthAsSize) * boundsPadding;
+            SetCameraSize(fitSize);
         }
 
         public void SetCameraSize(float size)
@@ -42,14 +50,38 @@ namespace IsoBuilder.Gameplay
             cam.orthographicSize = size;
         }
 
-        public Vector2 GetScreenCenter() 
+        public Vector2 GetScreenCenter()
         {
             return cam.pixelRect.center;
         }
-       
-        public Vector2 ScreenToWorldPosition(Vector2 screenPosition) 
+
+        public Vector2 ScreenToWorldPosition(Vector2 screenPosition)
         {
             return cam.ScreenToWorldPoint(screenPosition);
+        }
+
+        public void Pan(Vector2 offset)
+        {
+            MoveCamera(cam.transform.position + new Vector3(offset.x, offset.y, 0));
+        }
+
+        public void MoveCamera(Vector3 position)
+        {
+            var x = Mathf.Clamp(position.x, mapBounds.min.x, mapBounds.max.x);
+            var y = Mathf.Clamp(position.y, mapBounds.min.y, mapBounds.max.y);
+            cam.transform.position = new Vector3(x, y, cam.transform.position.z);
+        }
+
+        public void Zoom(float increment)
+        {
+            float size = Mathf.Clamp(cam.orthographicSize - increment, fitSize / 2f, fitSize);
+            SetCameraSize(size);
+        }
+        
+        public void PinchZoom(float factor)
+        {
+            float size = Mathf.Clamp(cam.orthographicSize * factor, fitSize / 2f, fitSize);
+            SetCameraSize(size);
         }
 
         private void OnDestroy()
