@@ -2,6 +2,7 @@ using Cysharp.Threading.Tasks;
 using IsoBuilder.Core;
 using IsoBuilder.Gameplay;
 using IsoBuilder.UI;
+using IsoBuilder.Utils;
 using UnityEngine;
 
 namespace IsoBuilder
@@ -14,36 +15,30 @@ namespace IsoBuilder
         [SerializeField] private GameConfig gameConfig;
         [SerializeField] private PlacementController placementController;
         [SerializeField] private ObjectManager objectManager;
-
-        private ItemCatalog itemCatalog;
-        private ItemSpriteLoader itemSpriteLoader;
+        [SerializeField] private Pooling pooling;
 
         private LoadSavePlacement loadSavePlacement;
-        private SaveDataStore saveDataStore;
+        private GameContext gameContext;
 
         private async UniTaskVoid Start()
         {
-            itemCatalog = new ItemCatalog();
-            itemCatalog.Initialize(gameConfig.ItemConfig, gameConfig.StationConfig);
-            itemSpriteLoader = new ItemSpriteLoader();
+            gameContext = new GameContext(gameConfig, new SpriteLoader(), pooling);
 
-            saveDataStore = new SaveDataStore();
-            saveDataStore.LoadData();
-            loadSavePlacement = new LoadSavePlacement(saveDataStore);
+            loadSavePlacement = new LoadSavePlacement(gameContext.SaveDataStore);
 
-            uiManager.Initialize(saveDataStore, gameConfig);
+            uiManager.Initialize(gameContext);
 
             await mapController.Initialize(gameConfig.GridSystemConfig);
 
             cameraController.Initialize();
             cameraController.FitToBounds(mapController.GetMapBounds());
 
-            objectManager.Initialize(mapController, loadSavePlacement);
+            objectManager.Initialize(mapController, loadSavePlacement, pooling);
 
-            placementController.Initialize(uiManager, itemCatalog, itemSpriteLoader, mapController, objectManager, cameraController);
-            await loadSavePlacement.ApplySave(placementController.PlaceItemFromData);
+            placementController.Initialize(uiManager, gameContext.PlaceableCatalog, gameContext.SpriteLoader, mapController, objectManager, cameraController);
+            await loadSavePlacement.ApplySave(placementController.PlaceObjectFromData);
 
-            await uiManager.ShowItemCatalogs(itemCatalog, itemSpriteLoader, (data) => placementController.PlaceItem(data).Forget());
+            await uiManager.ShowPlaceableCatalogs(gameContext.PlaceableCatalog, gameContext.SpriteLoader, (data) => placementController.PlaceObject(data).Forget());
 
             uiManager.SetActiveLoadingScreen(false);
         }

@@ -9,16 +9,14 @@ namespace IsoBuilder.UI
     public class UIStationController
     {
         private readonly Transform container;
-        private readonly SaveDataStore saveDataStore;
-        private readonly GameConfig gameConfig;
+        private readonly GameContext gameContext;
         private StationType currentStationType;
 
         private Dictionary<StationType, UIBaseStation> stationUIs;
 
-        public UIStationController(SaveDataStore saveDataStore, GameConfig gameConfig, Transform container)
+        public UIStationController(GameContext gameContext, Transform container)
         {
-            this.saveDataStore = saveDataStore;
-            this.gameConfig = gameConfig;
+            this.gameContext = gameContext;
             this.container = container;
             stationUIs = new Dictionary<StationType, UIBaseStation>();
         }
@@ -65,20 +63,21 @@ namespace IsoBuilder.UI
                 return null;
             }
             stationUI = GameObject.Instantiate(stationUIPrefab, container);
-            stationUI.Initialize(saveDataStore, gameConfig, () => CloseCurrentStationUI());
+            stationUI.Initialize(gameContext, () => CloseCurrentStationUI());
             stationUIs[stationType] = stationUI;
             return stationUI;
         }
 
         private void CloseCurrentStationUI()
         {
-            if(currentStationType == StationType.None)
+            if (currentStationType == StationType.None)
             {
                 return;
             }
             if (stationUIs.TryGetValue(currentStationType, out UIBaseStation stationUI))
             {
                 stationUI.Hide();
+                stationUI.Dispose();
                 currentStationType = StationType.None;
             }
         }

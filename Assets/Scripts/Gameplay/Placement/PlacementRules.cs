@@ -15,14 +15,14 @@ namespace IsoBuilder.Gameplay
             this.occupancyGrid = occupancyGrid;
         }
 
-        public bool CanPlaceItem(Vector2Int originCell, ItemData itemData, bool flipped, int instanceId)
+        public bool CanPlaceObject(Vector2Int originCell, PlaceableData placeableData, bool flipped, int instanceId)
         {
-            if (itemData.Type == ItemType.None)
+            if (placeableData.Type == PlaceableType.None)
             {
                 return false;
             }
 
-            IReadOnlyList<Vector2Int> cellsToCheck = itemData.GetCells(originCell, flipped);
+            IReadOnlyList<Vector2Int> cellsToCheck = placeableData.GetCells(originCell, flipped);
             foreach (Vector2Int cell in cellsToCheck)
             {
                 if (!mapController.TryGetZoneType(cell, out ZoneType zoneType) || zoneType == ZoneType.None)
@@ -30,7 +30,7 @@ namespace IsoBuilder.Gameplay
                     return false;
                 }
 
-                if (!CanFitInZone(itemData.Type, zoneType) || !occupancyGrid.IsFree(cell, instanceId))
+                if (!CanFitInZone(placeableData.Type, zoneType) || !occupancyGrid.IsFree(cell, instanceId))
                 {
                     return false;
                 }
@@ -38,14 +38,14 @@ namespace IsoBuilder.Gameplay
             return true;
         }
 
-        private bool CanFitInZone(ItemType itemType, ZoneType zoneType)
+        private bool CanFitInZone(PlaceableType placeableType, ZoneType zoneType)
         {
             if (zoneType == ZoneType.Mixed)
             {
                 return true;
             }
 
-            if (itemType == ItemType.Furniture && zoneType == ZoneType.Furniture)
+            if (placeableType == PlaceableType.Furniture && zoneType == ZoneType.Furniture)
             {
                 return true;
             }

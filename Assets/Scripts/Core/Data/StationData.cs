@@ -5,7 +5,7 @@ namespace IsoBuilder.Core
     [Serializable]
     public class StationData
     {
-        public int ItemId;
+        public int Id;
         public StationType Type;
     }
 }

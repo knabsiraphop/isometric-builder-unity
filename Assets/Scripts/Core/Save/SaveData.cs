@@ -1,18 +1,25 @@
 using System;
-using System.Collections.Generic;
 
 namespace IsoBuilder.Core
 {
     [Serializable]
     public class SaveData
     {
-        public List<PlacedItemData> PlacedObjectDatas;
+        public PlacedObjectData[] PlacedObjectDatas;
         public int QuizProgress;
+        public InventoryItemInstanceData[] InventoryItemInstanceDatas;
+        public MixerStateData MixerStateData;
 
-        public SaveData()
+        public void ApplySaveData(GameConfig gameConfig)
         {
-            PlacedObjectDatas = new List<PlacedItemData>();
+            PlacedObjectDatas = null;
             QuizProgress = 0;
+
+            InventoryItemInstanceData[] inventoryItemInstanceDatas = gameConfig.InventoryStartData.InventoryItemInstanceDatas;
+            InventoryItemInstanceDatas = new InventoryItemInstanceData[inventoryItemInstanceDatas.Length];
+            Array.Copy(inventoryItemInstanceDatas, InventoryItemInstanceDatas, inventoryItemInstanceDatas.Length);
+
+            MixerStateData = new();
         }
     }
 }

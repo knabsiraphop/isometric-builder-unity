@@ -1,6 +1,6 @@
-using UnityEngine;
-using TMPro;
 using IsoBuilder.Core;
+using TMPro;
+using UnityEngine;
 using UnityEngine.Events;
 
 namespace IsoBuilder.UI
@@ -25,11 +25,11 @@ namespace IsoBuilder.UI
         private QuizData currentQuizData;
         private int currentShowQuizId = -1;
 
-        public override void Initialize(SaveDataStore saveDataStore, GameConfig gameConfig, UnityAction close)
+        public override void Initialize(GameContext gameContext, UnityAction close)
         {
-            base.Initialize(saveDataStore, gameConfig, close);
+            base.Initialize(gameContext, close);
 
-            quizConfig = gameConfig.QuizConfig;
+            quizConfig = gameContext.Config.QuizConfig;
             for (int i = 0; i < choices.Length; i++)
             {
                 choices[i].Initialize(OnSelectChoice, i);
@@ -56,18 +56,18 @@ namespace IsoBuilder.UI
 
         private void ShowQuiz()
         {
-            if (quizConfig.QuizDatas.Length <= saveDataStore.SaveData.QuizProgress)
+            if (quizConfig.QuizDatas.Length <= GameContext.SaveDataStore.SaveData.QuizProgress)
             {
                 questionPanelObject.SetActive(false);
                 passedPanelObject.SetActive(true);
                 return;
             }
-            currentQuizData = quizConfig.QuizDatas[saveDataStore.SaveData.QuizProgress];
+            currentQuizData = quizConfig.QuizDatas[GameContext.SaveDataStore.SaveData.QuizProgress];
             if (currentShowQuizId == currentQuizData.id)
             {
                 return;
             }
-            questionNumberText.text = $"ข้อที่ {saveDataStore.SaveData.QuizProgress + 1}/{quizConfig.QuizDatas.Length}";
+            questionNumberText.text = $"ข้อที่ {GameContext.SaveDataStore.SaveData.QuizProgress + 1}/{quizConfig.QuizDatas.Length}";
             questionText.text = currentQuizData.question;
             for (int i = 0; i < choices.Length; i++)
             {
@@ -85,8 +85,8 @@ namespace IsoBuilder.UI
             string buttonText;
             if (index == currentQuizData.correctAnswerIndex)
             {
-                saveDataStore.SaveData.QuizProgress++;
-                saveDataStore.Save();
+                GameContext.SaveDataStore.SaveData.QuizProgress++;
+                GameContext.SaveDataStore.Save();
                 messageText = currentQuizData.answerExplanation;
                 buttonText = quizConfig.nextQuizButtonMessage;
             }

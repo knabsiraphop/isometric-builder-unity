@@ -1,4 +1,5 @@
 using IsoBuilder.Core;
+using IsoBuilder.Utils;
 using System;
 using UnityEngine;
 using UnityEngine.Events;
@@ -6,17 +7,15 @@ using UnityEngine.UI;
 
 namespace IsoBuilder.UI
 {
-    public class UIBaseStation : MonoBehaviour
+    public class UIBaseStation : MonoBehaviour, IDisposable
     {
         [SerializeField] private Button closeButton;
 
-        protected SaveDataStore saveDataStore;
-        protected GameConfig gameConfig;
+        protected GameContext GameContext { get; private set; }
 
-        public virtual void Initialize(SaveDataStore saveDataStore, GameConfig gameConfig, UnityAction close)
+        public virtual void Initialize(GameContext gameContext, UnityAction close)
         {
-            this.saveDataStore = saveDataStore;
-            this.gameConfig = gameConfig;
+            GameContext = gameContext;
 
             if (closeButton != null)
             {
@@ -32,6 +31,10 @@ namespace IsoBuilder.UI
         public virtual void Hide()
         {
             gameObject.SetActive(false);
+        }
+
+        public virtual void Dispose()
+        {
         }
     }
 }

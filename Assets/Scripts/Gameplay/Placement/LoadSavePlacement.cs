@@ -8,59 +8,63 @@ namespace IsoBuilder.Gameplay
 {
     public class LoadSavePlacement
     {
-        private readonly Dictionary<int, PlacedItemData> placedItemDatas;
+        private readonly Dictionary<int, PlacedObjectData> placedObjectDatas;
         private readonly SaveDataStore saveDataStore;
 
         public LoadSavePlacement(SaveDataStore saveDataStore)
         {
             this.saveDataStore = saveDataStore;
-            placedItemDatas = new Dictionary<int, PlacedItemData>();
+            placedObjectDatas = new Dictionary<int, PlacedObjectData>();
         }
 
-        public async UniTask ApplySave(Func<PlacedItemData, UniTask> placeItem)
+        public async UniTask ApplySave(Func<PlacedObjectData, UniTask> placeObject)
         {
-            IEnumerable<PlacedItemData> sortDatas = saveDataStore.SaveData.PlacedObjectDatas.OrderBy(data => data.InstanceId);
-            foreach (PlacedItemData placedObjectData in sortDatas)
+            PlacedObjectData[] savePlacedObjectDatas = saveDataStore.SaveData.PlacedObjectDatas;
+            if(savePlacedObjectDatas != null)
             {
-                placedItemDatas[placedObjectData.InstanceId] = placedObjectData;
-                await placeItem(placedObjectData);
+                IEnumerable<PlacedObjectData> sortDatas = savePlacedObjectDatas.OrderBy(data => data.InstanceId);
+                foreach (PlacedObjectData placedObjectData in sortDatas)
+                {
+                    placedObjectDatas[placedObjectData.InstanceId] = placedObjectData;
+                    await placeObject(placedObjectData);
+                }
             }
         }
 
         public void SaveRemoveState(int instanceId)
         {
-            if (placedItemDatas.ContainsKey(instanceId))
+            if (placedObjectDatas.ContainsKey(instanceId))
             {
-                placedItemDatas.Remove(instanceId);
+                placedObjectDatas.Remove(instanceId);
             }
 
             Save();
         }
 
-        public void SaveAddOrUpdateState(PlacedItem placedItem)
+        public void SaveAddOrUpdateState(PlacedObject placedObject)
         {
-            int instanceId = placedItem.InstanceId;
-            if (placedItemDatas.TryGetValue(instanceId, out PlacedItemData placedItemData))
+            int instanceId = placedObject.InstanceId;
+            if (placedObjectDatas.TryGetValue(instanceId, out PlacedObjectData placedObjectData))
             {
-                if (IsEqual(placedItemData, placedItem))
+                if (IsEqual(placedObjectData, placedObject))
                 {
                     return;
                 }
                 else
                 {
-                    placedItemData.ItemId = placedItem.ItemData.Id;
-                    placedItemData.CellOrigin = placedItem.CellOrigin;
-                    placedItemData.Flipped = placedItem.Flipped;
+                    placedObjectData.Id = placedObject.PlaceableData.Id;
+                    placedObjectData.CellOrigin = placedObject.CellOrigin;
+                    placedObjectData.Flipped = placedObject.Flipped;
                 }
             }
             else
             {
-                placedItemDatas[instanceId] = new PlacedItemData
+                placedObjectDatas[instanceId] = new PlacedObjectData
                 {
                     InstanceId = instanceId,
-                    ItemId = placedItem.ItemData.Id,
-                    CellOrigin = placedItem.CellOrigin,
-                    Flipped = placedItem.Flipped,
+                    Id = placedObject.PlaceableData.Id,
+                    CellOrigin = placedObject.CellOrigin,
+                    Flipped = placedObject.Flipped,
                 };
             }
 
@@ -69,22 +73,22 @@ namespace IsoBuilder.Gameplay
 
         private void Save()
         {
-            List<PlacedItemData> placedObjectDatas = new List<PlacedItemData>(placedItemDatas.Values);
-            saveDataStore.SaveData.PlacedObjectDatas = placedObjectDatas;
+            PlacedObjectData[] datas = placedObjectDatas.Values.ToArray();
+            saveDataStore.SaveData.PlacedObjectDatas = datas;
             saveDataStore.Save();
         }
 
-        private bool IsEqual(PlacedItemData data, PlacedItem placedItem)
+        private bool IsEqual(PlacedObjectData data, PlacedObject placedObject)
         {
-            if (data.ItemId != placedItem.ItemData.Id)
+            if (data.Id != placedObject.PlaceableData.Id)
             {
                 return false;
             }
-            if (data.CellOrigin != placedItem.CellOrigin)
+            if (data.CellOrigin != placedObject.CellOrigin)
             {
                 return false;
             }
-            if (data.Flipped != placedItem.Flipped)
+            if (data.Flipped != placedObject.Flipped)
             {
                 return false;
             }

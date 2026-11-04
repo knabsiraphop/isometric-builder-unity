@@ -1,5 +1,6 @@
 using Cysharp.Threading.Tasks;
 using IsoBuilder.Core;
+using IsoBuilder.Utils;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
@@ -9,15 +10,15 @@ namespace IsoBuilder.UI
     public class UIManager : MonoBehaviour, IUIManager
     {
         [SerializeField] private GameObject loadingScreen;
-        [SerializeField] private UIItemCatalog uiItemCatalog;
+        [SerializeField] private UIPlaceableCatalog uiPlaceableCatalog;
         [SerializeField] private UIPlacementPanel uiPlacementPanel;
         [SerializeField] private Transform panelContainer;
 
         private UIStationController stationController;
 
-        public void Initialize(SaveDataStore saveDataStore, GameConfig gameConfig)
+        public void Initialize(GameContext gameContext)
         {
-            stationController = new UIStationController(saveDataStore, gameConfig, panelContainer);
+            stationController = new UIStationController(gameContext, panelContainer);
         }
 
         public void SetActiveLoadingScreen(bool isActive)
@@ -28,21 +29,21 @@ namespace IsoBuilder.UI
             }
         }
 
-        public async UniTask ShowItemCatalogs(ItemCatalog itemCatalog, IItemSpriteLoader itemSpriteLoader, UnityAction<ItemData> onItemSelect)
+        public async UniTask ShowPlaceableCatalogs(PlaceableCatalog placeableCatalog, ISpriteLoader placeableSpriteLoader, UnityAction<PlaceableData> onSelect)
         {
-            IEnumerable<ItemData> items = itemCatalog.GetItems();
+            IEnumerable<PlaceableData> datas = placeableCatalog.GetPlaceableDatas();
 
-            foreach (ItemData item in items)
+            foreach (PlaceableData data in datas)
             {
-                Sprite itemSprite = await itemSpriteLoader.GetSprite(item);
-                AddItemsToList(itemSprite, () => onItemSelect(item));
+                Sprite sprite = await placeableSpriteLoader.GetSprite(data.GetResourcePath(), data.GetSpriteKey());
+                AddButtonsToList(sprite, () => onSelect(data));
             }
-            ShowItemCatalog();
+            ShowPlaceableCatalog();
         }
 
-        public void AddItemsToList(Sprite itemSprite, UnityAction onClickAction)
+        public void AddButtonsToList(Sprite sprite, UnityAction onClickAction)
         {
-            uiItemCatalog.AddItem(itemSprite, onClickAction);
+            uiPlaceableCatalog.AddButton(sprite, onClickAction);
         }
 
         public void ShowPlacementPanel(UnityAction onConfirm, UnityAction onCancel, UnityAction onFlip)
@@ -61,14 +62,14 @@ namespace IsoBuilder.UI
             stationController.OpenStationUI(stationType).Forget();
         }
 
-        public void ShowItemCatalog()
+        public void ShowPlaceableCatalog()
         {
-            uiItemCatalog.gameObject.SetActive(true);
+            uiPlaceableCatalog.gameObject.SetActive(true);
         }
 
-        public void HideItemCatalog()
+        public void HidePlaceableCatalog()
         {
-            uiItemCatalog.gameObject.SetActive(false);
+            uiPlaceableCatalog.gameObject.SetActive(false);
         }
     }
 }
