@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
 namespace IsoBuilder.UI
@@ -21,15 +22,17 @@ namespace IsoBuilder.UI
         private CancellationTokenSource cancellationTokenSource;
         private MixerRecipeData mixerRecipeData;
         private Inventory inventoryItem;
-        private Action refreshAndshowMixerIdle;
+        private UnityAction refreshMixer;
+        private IUIPopup popup;
 
-        public void Initialize(GameContext gameContext, Action refreshAndshowMixerIdle)
+        public void Initialize(GameContext gameContext, UnityAction refreshMixer)
         {
             this.saveDataStore = gameContext.SaveDataStore;
             this.spriteLoader = gameContext.SpriteLoader;
             this.inventoryItemCatalog = gameContext.InventoryItemCatalog;
-            this.refreshAndshowMixerIdle = refreshAndshowMixerIdle;
+            this.refreshMixer = refreshMixer;
             this.inventoryItem = gameContext.Inventory;
+            this.popup = gameContext.Popup;
 
             collectButton.onClick.RemoveAllListeners();
             collectButton.onClick.AddListener(CollectItem);
@@ -40,7 +43,7 @@ namespace IsoBuilder.UI
             collectButton.interactable = false;
             saveDataStore.SaveData.MixerStateData.Clear();
             inventoryItem.AddItem(mixerRecipeData.ResultId, 1);
-            refreshAndshowMixerIdle?.Invoke();
+            popup.ShowPopup("Item received!", refreshMixer);
         }
 
         public async UniTask StartProcess(MixerRecipeData data)
@@ -98,7 +101,7 @@ namespace IsoBuilder.UI
             resultMixerSlot.ClearIcon();
         }
 
-        private void StopProcessLoop() 
+        private void StopProcessLoop()
         {
             timeRemainingText.text = "00:00:00";
             if (cancellationTokenSource != null)
