@@ -18,7 +18,8 @@ namespace IsoBuilder.UI
         private InventoryItemCatalog inventoryItemCatalog;
         private ISpriteLoader spriteLoader;
         private UnityAction<int> onSlotCleared;
-        UnityAction<MixerRecipeData> onRecipeMatch;
+        private UnityAction<MixerRecipeData> onRecipeMatch;
+        private IUIPopup popup;
 
         public void Initialize(GameContext gameContext, UnityAction<int> onSlotCleared, UnityAction<MixerRecipeData> onRecipeMatch)
         {
@@ -27,6 +28,7 @@ namespace IsoBuilder.UI
             this.spriteLoader = gameContext.SpriteLoader;
             this.onSlotCleared = onSlotCleared;
             this.onRecipeMatch = onRecipeMatch;
+            this.popup = gameContext.Popup;
 
             selectedIds = new int[slots.Length];
             for (int i = 0; i < slots.Length; i++)
@@ -46,8 +48,16 @@ namespace IsoBuilder.UI
 
         public bool TryAddIngredient(int id)
         {
-            if (selectedIds.Contains(id) || !selectedIds.Contains(-1))
+            if (selectedIds.Contains(id))
+            {
+                popup.ShowPopup("This item is already in a slot.");
                 return false;
+            }
+            if (!selectedIds.Contains(-1))
+            {
+                popup.ShowPopup("Slots are full. Tap a slot to remove.");
+                return false;
+            }
 
             for (int i = 0; i < selectedIds.Length; i++)
             {
@@ -64,11 +74,12 @@ namespace IsoBuilder.UI
 
         private void TrySetResultId()
         {
-            if (config.TryFindRecipe(selectedIds[0], selectedIds[1], out MixerRecipeData recipe))
+            if (!config.TryFindRecipe(selectedIds[0], selectedIds[1], out MixerRecipeData recipe))
             {
-                resultId = recipe.ResultId;
-                onRecipeMatch?.Invoke(recipe);
+                return;
             }
+            resultId = recipe.ResultId;
+            onRecipeMatch?.Invoke(recipe);
         }
 
         public async UniTask RefreshIcons()

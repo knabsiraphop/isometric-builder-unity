@@ -25,20 +25,21 @@ namespace IsoBuilder.Gameplay
         private PointerInput pointerInput;
         private PlaceableObjectDragger placeableObjectDragger;
         private PlaceableObjectPressDetector placeableObjectPressDetector;
+        private IUIPopup popup;
 
         private PlacedObject currentPlacedObject;
         private CurrentSelectedObjectData currentSelectedObjectData;
         private BuildMode currentMode = BuildMode.None;
 
-        public void Initialize(IUIManager uiManager, PlaceableCatalog placeableCatalog, ISpriteLoader spriteLoader,
-            MapController mapController, ObjectManager objectManager, CameraController cameraController)
+        public void Initialize(GameContext gameContext, IUIManager uiManager, MapController mapController, ObjectManager objectManager, CameraController cameraController)
         {
             this.uiManager = uiManager;
-            this.placeableCatalog = placeableCatalog;
-            this.spriteLoader = spriteLoader;
+            this.placeableCatalog = gameContext.PlaceableCatalog;
+            this.spriteLoader = gameContext.SpriteLoader;
             this.mapController = mapController;
             this.objectManager = objectManager;
             this.cameraController = cameraController;
+            popup = gameContext.Popup;
 
             pointerInput = new PointerInput();
             placeableObjectDragger = new(cameraController, pointerInput, mapController);
@@ -81,14 +82,16 @@ namespace IsoBuilder.Gameplay
             {
                 return;
             }
-            if (objectManager.TryCreatePlacedObject(placeableData, placeableSprite, out PlacedObject placedObject))
+            if (!objectManager.TryCreatePlacedObject(placeableData, placeableSprite, out PlacedObject placedObject))
             {
-                Vector2 screenCenter = cameraController.GetScreenCenter();
-                Vector2 worldPosition = cameraController.ScreenToWorldPosition(screenCenter);
-                Vector2Int cellOrigin = mapController.WorldToCell(worldPosition);
-                SetPlaceablePlacement(cellOrigin, placedObject, false);
-                SelectObject(placedObject);
+                popup.ShowPopup("This station is already on the map.");
+                return;
             }
+            Vector2 screenCenter = cameraController.GetScreenCenter();
+            Vector2 worldPosition = cameraController.ScreenToWorldPosition(screenCenter);
+            Vector2Int cellOrigin = mapController.WorldToCell(worldPosition);
+            SetPlaceablePlacement(cellOrigin, placedObject, false);
+            SelectObject(placedObject);
         }
 
         private void SelectObject(PlacedObject placedObject)
@@ -120,7 +123,11 @@ namespace IsoBuilder.Gameplay
             if (currentMode == BuildMode.Destroy)
             {
                 if (placedObject.PlaceableData.CannotDestroy)
+                {
+                    popup.ShowPopup("This object can't be destroyed.");
                     return;
+                }
+
                 objectManager.OnRemovePlacedObject(placedObject);
                 objectManager.ReturnPlacedObject(placedObject);
             }
@@ -139,7 +146,7 @@ namespace IsoBuilder.Gameplay
         {
             if (!objectManager.CanPlaceObject(currentPlacedObject, currentPlacedObject.CellOrigin, currentPlacedObject.Flipped))
             {
-                Debug.LogError("Can't Place Saved Placeable");
+                popup.ShowPopup("Can't place here.");
                 return;
             }
             if (objectManager.IsPlaceableObjectConfirm(currentPlacedObject))

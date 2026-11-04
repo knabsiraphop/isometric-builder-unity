@@ -111,7 +111,7 @@ namespace IsoBuilder.UI
             if (!GameContext.Inventory.TryConsumeItems(new int[] { currentMixerRecipeData.Ingredient1Id, currentMixerRecipeData.Ingredient2Id },
                 new int[] { 1, 1 }))
             {
-                Debug.LogError("Not enough item");
+                GameContext.Popup.ShowPopup("Not enough items.");
                 return;
             }
 

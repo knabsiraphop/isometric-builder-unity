@@ -12,8 +12,9 @@ namespace IsoBuilder.Core
         public Pooling Pooling { get; private set; }
         public Inventory Inventory { get; private set; }
         public IBuildController BuildController { get; private set; }
+        public IUIPopup Popup { get; private set; }
 
-        public GameContext(GameConfig config, ISpriteLoader spriteLoader, Pooling pooling, IBuildController buildController)
+        public GameContext(GameConfig config, ISpriteLoader spriteLoader, Pooling pooling, IBuildController buildController, IUIPopup popup)
         {
             Config = config;
 
@@ -29,6 +30,7 @@ namespace IsoBuilder.Core
             Pooling = pooling;
 
             BuildController = buildController;
+            Popup = popup;
         }
     }
 }

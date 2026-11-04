@@ -13,8 +13,11 @@ namespace IsoBuilder.UI
         [SerializeField] private UIPlaceableCatalog uiPlaceableCatalog;
         [SerializeField] private UIPlacementPanel uiPlacementPanel;
         [SerializeField] private Transform panelContainer;
+        [SerializeField] private UIPopup popup;
 
         private UIStationController stationController;
+
+        public IUIPopup Popup => popup;
 
         public void Initialize(GameContext gameContext)
         {
