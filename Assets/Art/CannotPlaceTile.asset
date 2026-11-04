@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: CannotPlaceTile
   m_EditorClassIdentifier: UnityEngine.dll::UnityEngine.Tilemaps.Tile
   m_Sprite: {fileID: 21300000, guid: ef55c17818c627b49aec50f58a6697bf, type: 3}
-  m_Color: {r: 0.9, g: 0.2, b: 0.2, a: 0.55}
+  m_Color: {r: 0.9, g: 0.2, b: 0.2, a: 1}
   m_Transform:
     e00: 1
     e01: 0

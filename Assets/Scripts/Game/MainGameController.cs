@@ -22,7 +22,7 @@ namespace IsoBuilder
 
         private async UniTaskVoid Start()
         {
-            gameContext = new GameContext(gameConfig, new SpriteLoader(), pooling);
+            gameContext = new GameContext(gameConfig, new SpriteLoader(), pooling, placementController, uiManager.Popup);
 
             loadSavePlacement = new LoadSavePlacement(gameContext.SaveDataStore);
 
@@ -35,10 +35,10 @@ namespace IsoBuilder
 
             objectManager.Initialize(mapController, loadSavePlacement, pooling);
 
-            placementController.Initialize(uiManager, gameContext.PlaceableCatalog, gameContext.SpriteLoader, mapController, objectManager, cameraController);
+            placementController.Initialize(gameContext, uiManager, mapController, objectManager, cameraController);
             await loadSavePlacement.ApplySave(placementController.PlaceObjectFromData);
 
-            await uiManager.ShowPlaceableCatalogs(gameContext.PlaceableCatalog, gameContext.SpriteLoader, (data) => placementController.PlaceObject(data).Forget());
+            await uiManager.InitializePlaceableCatalog(gameContext.PlaceableCatalog, gameContext.SpriteLoader, (data) => placementController.PlaceObject(data).Forget());
 
             uiManager.SetActiveLoadingScreen(false);
         }

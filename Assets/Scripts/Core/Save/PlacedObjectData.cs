@@ -10,5 +10,10 @@ namespace IsoBuilder.Core
         public int Id;
         public Vector2Int CellOrigin;
         public bool Flipped;
+
+        public PlacedObjectData Clone()
+        {
+            return (PlacedObjectData)MemberwiseClone();
+        }
     }
 }

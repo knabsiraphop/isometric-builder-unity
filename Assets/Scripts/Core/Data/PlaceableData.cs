@@ -11,6 +11,7 @@ namespace IsoBuilder.Core
         public Vector2Int FootPrint;
         public PlaceableType Type;
         public Vector2 SpriteOffset;
+        public bool CannotDestroy;
 
         public IReadOnlyList<Vector2Int> GetCells(Vector2Int originCell, bool flipped)
         {

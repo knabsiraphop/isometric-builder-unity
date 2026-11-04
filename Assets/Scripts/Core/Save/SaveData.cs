@@ -12,10 +12,16 @@ namespace IsoBuilder.Core
 
         public void ApplySaveData(GameConfig gameConfig)
         {
-            PlacedObjectDatas = null;
+            PlacedObjectData[] startingPlaceObjects = gameConfig.StartingData.PlacedObjectDatas;
+            PlacedObjectDatas = new PlacedObjectData[startingPlaceObjects.Length];
+            for (int i = 0; i < startingPlaceObjects.Length; i++) 
+            {
+                PlacedObjectDatas[i] = startingPlaceObjects[i].Clone();
+            }
+
             QuizProgress = 0;
 
-            InventoryItemInstanceData[] inventoryItemInstanceDatas = gameConfig.InventoryStartData.InventoryItemInstanceDatas;
+            InventoryItemInstanceData[] inventoryItemInstanceDatas = gameConfig.StartingData.InventoryItemInstanceDatas;
             InventoryItemInstanceDatas = new InventoryItemInstanceData[inventoryItemInstanceDatas.Length];
             Array.Copy(inventoryItemInstanceDatas, InventoryItemInstanceDatas, inventoryItemInstanceDatas.Length);
 

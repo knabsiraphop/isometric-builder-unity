@@ -11,6 +11,6 @@ namespace IsoBuilder.Core
         [field: SerializeField] public StationConfig StationConfig { get; private set; }
         [field: SerializeField] public MixerConfig MixerConfig { get; private set; }
         [field: SerializeField] public InventoryItemMasterData InventoryItemMasterData { get; private set; }
-        [field: SerializeField] public InventoryStartData InventoryStartData { get; private set; }
+        [field: SerializeField] public StartingData StartingData { get; private set; }
     }
 }
