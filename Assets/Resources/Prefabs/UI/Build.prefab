@@ -842,7 +842,7 @@ MonoBehaviour:
   m_text: 'Mode :'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 5bc1715eba8790e44b0e4854d7e3cb18, type: 2}
-  m_sharedMaterial: {fileID: -306939207098058030, guid: 5bc1715eba8790e44b0e4854d7e3cb18, type: 2}
+  m_sharedMaterial: {fileID: 2100000, guid: 229e896fb10b5254ea548bb90833a136, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -964,3 +964,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: IsoBuilder.UI::IsoBuilder.UI.UIBuilderStation
   closeButton: {fileID: 1277631965382790781}
+  buildModeButton: {fileID: 3245789811670700374}
+  destroyModeButton: {fileID: 506738267012420461}
+  modeText: {fileID: 6755092913510420505}

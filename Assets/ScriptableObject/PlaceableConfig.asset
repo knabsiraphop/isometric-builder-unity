@@ -17,51 +17,64 @@ MonoBehaviour:
     FootPrint: {x: 1, y: 3}
     Type: 1
     SpriteOffset: {x: -0.58, y: 0.76}
+    CannotDestroy: 0
   - Id: 2
     FootPrint: {x: 1, y: 1}
     Type: 1
     SpriteOffset: {x: 0, y: 1.61}
+    CannotDestroy: 0
   - Id: 3
     FootPrint: {x: 2, y: 4}
     Type: 1
     SpriteOffset: {x: -0.55, y: 1.29}
+    CannotDestroy: 0
   - Id: 4
     FootPrint: {x: 5, y: 5}
     Type: 1
     SpriteOffset: {x: 0, y: 1.48}
+    CannotDestroy: 0
   - Id: 5
     FootPrint: {x: 2, y: 3}
     Type: 1
     SpriteOffset: {x: -0.36, y: 1.2}
+    CannotDestroy: 0
   - Id: 6
     FootPrint: {x: 2, y: 2}
     Type: 1
     SpriteOffset: {x: 0, y: 1.83}
+    CannotDestroy: 0
   - Id: 7
     FootPrint: {x: 5, y: 3}
     Type: 1
     SpriteOffset: {x: 0.4, y: 1.46}
+    CannotDestroy: 0
   - Id: 8
     FootPrint: {x: 4, y: 3}
     Type: 1
     SpriteOffset: {x: 0.29, y: 1.45}
+    CannotDestroy: 0
   - Id: 9
     FootPrint: {x: 3, y: 3}
     Type: 1
     SpriteOffset: {x: 0.09, y: 1.35}
+    CannotDestroy: 0
   - Id: 10
     FootPrint: {x: 2, y: 3}
     Type: 1
     SpriteOffset: {x: -0.25, y: 1.66}
+    CannotDestroy: 0
   - Id: 11
     FootPrint: {x: 4, y: 7}
     Type: 2
     SpriteOffset: {x: -1.09, y: 3.44}
+    CannotDestroy: 0
   - Id: 12
     FootPrint: {x: 1, y: 5}
     Type: 2
     SpriteOffset: {x: -1.08, y: 1.8}
+    CannotDestroy: 0
   - Id: 13
     FootPrint: {x: 5, y: 6}
     Type: 2
     SpriteOffset: {x: -0.36, y: 2.48}
+    CannotDestroy: 1

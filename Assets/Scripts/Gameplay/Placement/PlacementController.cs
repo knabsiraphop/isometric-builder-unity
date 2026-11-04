@@ -28,6 +28,7 @@ namespace IsoBuilder.Gameplay
 
         private PlacedObject currentPlacedObject;
         private CurrentSelectedObjectData currentSelectedObjectData;
+        private BuildMode currentMode = BuildMode.None;
 
         public void Initialize(IUIManager uiManager, PlaceableCatalog placeableCatalog, ISpriteLoader spriteLoader,
             MapController mapController, ObjectManager objectManager, CameraController cameraController)
@@ -92,7 +93,7 @@ namespace IsoBuilder.Gameplay
 
         private void SelectObject(PlacedObject placedObject)
         {
-            if (placedObject == currentPlacedObject)
+            if (placedObject == currentPlacedObject || currentMode == BuildMode.Destroy)
                 return;
 
             if (currentPlacedObject != null)
@@ -116,11 +117,21 @@ namespace IsoBuilder.Gameplay
         {
             if (currentPlacedObject != null)
                 return;
-            if (placedObject.PlaceableData.Type != PlaceableType.Station)
-                return;
-            if (placeableCatalog.TryGetStationType(placedObject.PlaceableData.Id, out StationType stationType))
+            if (currentMode == BuildMode.Destroy)
             {
-                uiManager.ShowStationPanel(stationType);
+                if (placedObject.PlaceableData.CannotDestroy)
+                    return;
+                objectManager.OnRemovePlacedObject(placedObject);
+                objectManager.ReturnPlacedObject(placedObject);
+            }
+            else
+            {
+                if (placedObject.PlaceableData.Type != PlaceableType.Station)
+                    return;
+                if (placeableCatalog.TryGetStationType(placedObject.PlaceableData.Id, out StationType stationType))
+                {
+                    uiManager.ShowStationPanel(stationType);
+                }
             }
         }
 
@@ -171,7 +182,8 @@ namespace IsoBuilder.Gameplay
 
             currentPlacedObject = null;
             cellHighlighter.ClearAllHighlights();
-            uiManager.ShowPlaceableCatalog();
+            if (currentMode == BuildMode.Build)
+                uiManager.ShowPlaceableCatalog();
             uiManager.HidePlacementPanel();
             placeableObjectDragger.Reset();
         }
@@ -221,12 +233,21 @@ namespace IsoBuilder.Gameplay
             switch (mode)
             {
                 case BuildMode.None:
+                    if (currentMode == BuildMode.Build)
+                    {
+                        CancelPlacement();
+                        uiManager.HidePlaceableCatalog();
+                    }
                     break;
                 case BuildMode.Build:
+                    uiManager.ShowPlaceableCatalog();
                     break;
                 case BuildMode.Destroy:
+                    CancelPlacement();
+                    uiManager.HidePlaceableCatalog();
                     break;
             }
+            currentMode = mode;
         }
     }
 }

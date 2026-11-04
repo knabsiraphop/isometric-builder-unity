@@ -8,11 +8,11 @@ namespace IsoBuilder.UI
 {
     public class UIBuilderStation : UIBaseStation
     {
+        private const BuildMode StartMode = BuildMode.Build;
+
         [SerializeField] private Button buildModeButton;
         [SerializeField] private Button destroyModeButton;
         [SerializeField] private TextMeshProUGUI modeText;
-
-        private BuildMode currentMode = BuildMode.Build;
 
         public override void Initialize(GameContext gameContext, UnityAction close)
         {
@@ -25,22 +25,23 @@ namespace IsoBuilder.UI
 
         public override void Show()
         {
-            SetupMode(BuildMode.Build);
+            SetupMode(StartMode);
             base.Show();
         }
 
         private void SetupMode(BuildMode mode)
         {
-            currentMode = mode;
-            SetModeText();
+            SetModeText(mode);
+            GameContext.BuildController.SetBuildMode(mode);
         }
-        private void SetModeText()
+        private void SetModeText(BuildMode mode)
         {
-            modeText.text = $"Mode : {currentMode}";
+            modeText.text = $"Mode : {mode}";
         }
 
         public override void Dispose()
         {
+            SetupMode(BuildMode.None);
             base.Dispose();
         }
     }
