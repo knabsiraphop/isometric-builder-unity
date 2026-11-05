@@ -1,7 +1,7 @@
 # Isometric Builder — Unity Dev Work Test
 
 - Unity 6000.3.24f1 (2D template), Android, Landscape
-- Demo video: _TBD_
+- Demo video: https://drive.google.com/file/d/1IFKRqxqj8F_wa74dqv_89Nu6K_PFhHE9/view?usp=sharing
 
 ## Packages
 
